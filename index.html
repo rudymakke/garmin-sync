@@ -225,6 +225,7 @@ ol.rank li:first-child::before{background:var(--rosa);border-color:var(--rosa);c
 .m-no{background:rgba(255,112,149,.14);color:var(--rosa);}
 .m-na{background:#1C2E45;color:var(--lime-dim);}
 .m-ex{background:rgba(79,195,219,.14);color:var(--ice);}
+.m-trk{background:rgba(79,195,219,.14);color:var(--ice);}
 .row.past-no .plan{color:var(--lime-dim);text-decoration:line-through;text-decoration-thickness:1px;}
 .row.future{opacity:.55;}
 .ref{display:flex;gap:22px;flex-wrap:wrap;}
@@ -387,10 +388,11 @@ ol.rank li:first-child::before{background:var(--rosa);border-color:var(--rosa);c
   <div class="panel">
     <h2>Come leggerlo</h2>
     <p class="lede" style="margin:0">
-      L'aderenza è calcolata <strong>solo sul lavoro in bici</strong>. Le sedute di forza non
-      arrivano su Garmin, quindi contarle come mancate falserebbe il conto: restano indicate
-      ma escluse dal punteggio. Un'uscita registrata il giorno prima o dopo rispetto al piano
-      vale comunque come fatta, spostata.
+      L'aderenza è calcolata <strong>solo sul lavoro in bici</strong>, per tua scelta.
+      Se inizi a registrare anche la forza su Garmin la vedrai comparire lo stesso,
+      etichettata "tracciata" in un colore diverso — ma resta fuori dal punteggio.
+      Un'uscita registrata il giorno prima o dopo rispetto al piano vale comunque
+      come fatta, spostata.
     </p>
   </div>
 </section>
@@ -424,6 +426,10 @@ ol.rank li:first-child::before{background:var(--rosa);border-color:var(--rosa);c
     <div id="msg"></div>
   </div>
   <div class="panel">
+    <h2>Il piano di allenamento</h2>
+    <p class="lede" id="planLine"></p>
+  </div>
+  <div class="panel">
     <h2>Riferimenti da Garmin</h2>
     <p class="lede">Soglia e peso arrivano dal tuo account Garmin e non si modificano qui: fa fede il dato ufficiale. Aggiornali su Garmin e alla sincronizzazione successiva li ritrovi anche qui.</p>
     <div class="ref" id="refBox"></div>
@@ -439,8 +445,15 @@ ol.rank li:first-child::before{background:var(--rosa);border-color:var(--rosa);c
 <script>
 "use strict";
 
-/* ===== piano ===== */
-const GARA="2027-07-04";
+/* ===== piano =====
+   Questo array è la copia di riserva, usata solo se piano.json non si
+   riesce a caricare (rete assente, prima apertura offline, o il foglio
+   Google momentaneamente irraggiungibile). La fonte vera è il foglio
+   Google 'Piano': ogni notte la sincronizzazione lo rilegge e aggiorna
+   piano.json. Questa copia va quindi considerata "congelata" alla data
+   sotto, non l'ultima parola. */
+const PIANO_SNAPSHOT_DATE="2026-09-08";
+const raceDate=()=>PIANO[PIANO.length-1][C.al];
 const PIANO=[
 ["1 Base",1,"2026-10-05","2026-10-11","Carico","Ripresa della struttura dopo lo scarico di settembre","R1 Endurance + cadenza",60,"R2 SFR 4x6'",60,"F1 Forza superiori",30,"F2 Forza inferiori",25,"S1 Uscita 1h30 in Z2, circa 400 m di dislivello",90,4.4,"Se salta un rullo non recuperarlo. Se salta il weekend, R9 in casa da 60'."],
 ["1 Base",2,"2026-10-12","2026-10-18","Carico","Costruzione del volume aerobico","R1 Endurance + cadenza",60,"R2 SFR 4x6'",60,"F1 Forza superiori",30,"F2 Forza inferiori",25,"S1 Uscita 1h45 in Z2, circa 500 m",105,4.7,"Weekend piovoso: R9 al rullo, 75' in Z2."],
@@ -566,7 +579,7 @@ function drawSeason(){
   }
   $("#seasonProfile").innerHTML=s;
 
-  $("#hDays").textContent=Math.max(0,dayDiff(t,GARA));
+  $("#hDays").textContent=Math.max(0,dayDiff(t,raceDate()));
   $("#hWeek").textContent=idx>=0?PIANO[idx][C.n]:"—";
   $("#hWeekLab").textContent=idx>=0?`di 39 settimane`:"il piano non è iniziato";
   $("#hHours").textContent=idx>=0?nn(PIANO[idx][C.ore],1):"—";
@@ -1127,6 +1140,10 @@ function renderCmpTable(){
 
 /* ===== calendario: previsto contro fatto ===== */
 const isForza=n=>/^(F1|F2|F3)\b|forza/i.test(n||"");
+// distingue un'uscita in bici da qualsiasi altra cosa Garmin registri (forza,
+// camminate...): serve sia a non abbinare per sbaglio una seduta di forza
+// registrata a uno slot in bici dello stesso giorno, sia al contrario.
+const isBikeAct=a=>/cycl|bik|ride/i.test(a?.type||"");
 
 function slotsOf(r){
   const lun=r[C.n]>=22;
@@ -1160,7 +1177,7 @@ function matchWeek(r, byDate){
   const bike=slots.filter(s=>s.n&&!s.forza);
 
   bike.forEach(s=>{
-    const hit=pool.find(p=>p.iso===s.date&&!used.has(p.a.id));
+    const hit=pool.find(p=>p.iso===s.date&&!used.has(p.a.id)&&isBikeAct(p.a));
     if(hit){used.add(hit.a.id);s.stato="ok";s.act=hit.a;}
   });
   bike.forEach(s=>{
@@ -1168,7 +1185,7 @@ function matchWeek(r, byDate){
     // fra i candidati a un giorno di distanza scelgo quello che somiglia di più
     // alla seduta prevista come durata: evita che un giro occasionale si prenda
     // il posto dell'allenamento vero fatto il giorno dopo.
-    const cand=pool.filter(p=>!used.has(p.a.id)&&
+    const cand=pool.filter(p=>!used.has(p.a.id)&&isBikeAct(p.a)&&
       Math.abs((new Date(p.iso)-new Date(s.date))/864e5)<=1);
     if(!cand.length)return;
     cand.sort((x,y)=>{
@@ -1181,7 +1198,15 @@ function matchWeek(r, byDate){
     used.add(cand[0].a.id); s.stato="mv"; s.act=cand[0].a;
   });
   bike.forEach(s=>{ if(!s.stato) s.stato = s.date>today() ? "fut" : "no"; });
-  slots.forEach(s=>{ if(s.n&&s.forza) s.stato="na"; });
+
+  // Forza: se la tracci su Garmin la abbiniamo e la mostriamo, ma resta fuori
+  // dal conteggio dell'aderenza (bike.length sopra), che segue solo la bici
+  // com'è stato deciso. Se non trovi nulla resta "na", come prima.
+  slots.filter(s=>s.n&&s.forza).forEach(s=>{
+    const hit=pool.find(p=>p.iso===s.date&&!used.has(p.a.id)&&!isBikeAct(p.a));
+    if(hit){used.add(hit.a.id);s.stato="trk";s.act=hit.a;}
+    else s.stato="na";
+  });
 
   const extra=pool.filter(p=>!used.has(p.a.id)&&p.iso>=r[C.dal]&&p.iso<=r[C.al]).map(p=>p.a);
 
@@ -1275,7 +1300,7 @@ function weekCard(r,m,open){
   m.slots.forEach(s=>{
     if(!s.n){ return; }
     const badge={ok:["m-ok","fatta"],mv:["m-mv","spostata"],no:["m-no","saltata"],
-      na:["m-na","non tracciata"],fut:["m-na","da fare"]}[s.stato]||["m-na",""];
+      na:["m-na","non tracciata"],fut:["m-na","da fare"],trk:["m-trk","tracciata"]}[s.stato]||["m-na",""];
     let real="";
     if(s.act){
       const a=s.act;
@@ -1288,7 +1313,7 @@ function weekCard(r,m,open){
     } else if(s.stato==="no"){
       real=`<div class="real">niente registrato su Garmin</div>`;
     } else if(s.stato==="na"){
-      real=`<div class="real">a corpo libero, non arriva su Garmin</div>`;
+      real=`<div class="real">a corpo libero, oggi non risulta registrata</div>`;
     }
     const rowCls="row"+(s.stato==="no"?" past-no":"")+(s.stato==="fut"?" future":"");
     body.appendChild(mk("div",rowCls,
@@ -1310,6 +1335,23 @@ function weekCard(r,m,open){
   };
   return wrap;
 }
+
+/* ===== piano dal foglio Google, con ripiego sulla copia incorporata ===== */
+async function loadPlan(){
+  try{
+    const r=await fetch("piano.json",{cache:"no-store"});
+    if(!r.ok) throw new Error("piano.json assente");
+    const remote=await r.json();
+    if(!Array.isArray(remote)||remote.length<10) throw new Error("piano.json vuoto o incompleto");
+    // sostituisco il contenuto SENZA cambiare riferimento all'array: ogni
+    // funzione che chiude su PIANO vede subito la versione aggiornata.
+    PIANO.splice(0,PIANO.length,...remote);
+    planSource="foglio";
+  }catch(e){
+    planSource="copia del "+PIANO_SNAPSHOT_DATE.split("-").reverse().join("/");
+  }
+}
+let planSource="";
 
 /* ===== dati ===== */
 async function autoload(){
@@ -1357,6 +1399,11 @@ function readFiles(fl){
   });
 }
 function renderSrc(){
+  const planTxt = planSource==="foglio"
+    ? "Aggiornato ogni notte dal foglio Google."
+    : `Il foglio non è raggiungibile in questo momento: stai vedendo una copia salvata (${planSource}). Le settimane passate restano corrette, verifica le prossime direttamente sul foglio.`;
+  $("#planLine").textContent = planTxt;
+
   if(!DATA){$("#srcLine").textContent="Ancora niente. Carica data.json e training_load.json dalla cartella garmin-sync del tuo Drive.";return;}
   const w=Object.keys(DATA.wellness||{}).length, a=Object.keys(DATA.activities||{}).length;
   const s=LOAD?.series?.length||0;
@@ -1371,6 +1418,19 @@ function paint(){
   renderPiano(); renderCalendario(); renderSrc();
 }
 
+/* ===== avvio =====
+   Il piano si carica per primo: la scheda Piano e il profilo della stagione
+   dipendono da PIANO, quindi vanno disegnati solo dopo che loadPlan() ha
+   deciso se usare il foglio o la copia di riserva. I dati Garmin invece
+   proseguono in parallelo, senza farsi aspettare a vicenda. */
+(async function boot(){
+  await loadPlan();
+  drawSeason();
+  if(restore()) pickRefs();
+  paint();
+  autoload();
+})();
+
 /* ===== avvio ===== */
 $("#nav").addEventListener("click",e=>{
   const b=e.target.closest("button[data-p]"); if(!b)return;
@@ -1383,11 +1443,6 @@ $("#bPick").onclick=()=>$("#fPick").click();
 $("#fPick").onchange=e=>readFiles(e.target.files);
 $("#bClear").onclick=()=>{localStorage.removeItem(KEY);DATA=null;LOAD=null;
   $("#msg").className="msg good";$("#msg").textContent="Svuotato.";paint();};
-
-drawSeason();
-restore()&&pickRefs();
-paint();
-autoload();
 </script>
 </body>
 </html>
