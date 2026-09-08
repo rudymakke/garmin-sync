@@ -199,6 +199,38 @@ ol.rank li:first-child::before{background:var(--rosa);border-color:var(--rosa);c
 /* ---------- confronto uscite ---------- */
 .cmp td.route{max-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .trend{display:inline-block;width:52px;height:16px;vertical-align:middle;}
+
+/* ---------- calendario del piano ---------- */
+.wk{border:1px solid var(--edge);border-radius:12px;margin-bottom:11px;overflow:hidden;background:var(--rock);}
+.wk-head{display:flex;gap:12px;align-items:center;padding:12px 14px;background:var(--rock-2);flex-wrap:wrap;}
+.wk-head .id{font-size:13px;font-weight:700;}
+.wk-head .rng{font-size:11.5px;color:var(--lime-dim);}
+.wk-head .grow{flex:1;}
+.wk-score{display:flex;align-items:baseline;gap:5px;}
+.wk-score b{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;
+  font-variation-settings:'wdth' 112,'wght' 800;}
+.wk-score span{font-size:11px;color:var(--lime-dim);}
+.wk-bar{height:5px;background:#101B29;display:flex;}
+.wk-bar i{display:block;height:100%;}
+.wk-body{padding:6px 10px 12px;}
+.row{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:start;
+  padding:9px 4px;border-bottom:1px solid #1A2C42;}
+.row:last-child{border-bottom:none;}
+.row .d{font-size:11.5px;color:var(--lime-dim);padding-top:2px;}
+.row .plan{font-size:13.5px;font-weight:600;line-height:1.3;}
+.row .real{font-size:12px;color:var(--lime-dim);margin-top:3px;}
+.row .mark{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap;}
+.m-ok{background:rgba(147,194,78,.16);color:var(--meadow);}
+.m-mv{background:rgba(242,169,59,.16);color:var(--amber);}
+.m-no{background:rgba(255,112,149,.14);color:var(--rosa);}
+.m-na{background:#1C2E45;color:var(--lime-dim);}
+.m-ex{background:rgba(79,195,219,.14);color:var(--ice);}
+.row.past-no .plan{color:var(--lime-dim);text-decoration:line-through;text-decoration-thickness:1px;}
+.row.future{opacity:.55;}
+.ref{display:flex;gap:22px;flex-wrap:wrap;}
+.ref div b{display:block;font-size:29px;font-weight:800;line-height:1.05;
+  font-variation-settings:'wdth' 112,'wght' 800;font-variant-numeric:tabular-nums;}
+.ref div span{font-size:11.5px;color:var(--lime-dim);}
 </style>
 </head>
 <body>
@@ -219,6 +251,7 @@ ol.rank li:first-child::before{background:var(--rosa);border-color:var(--rosa);c
   <button class="on" data-p="oggi">Oggi</button>
   <button data-p="forma">Forma</button>
   <button data-p="piano">Piano</button>
+  <button data-p="calendario">Calendario</button>
   <button data-p="uscite">Uscite</button>
   <button data-p="dati">Dati</button>
 </nav>
@@ -344,6 +377,24 @@ ol.rank li:first-child::before{background:var(--rosa);border-color:var(--rosa);c
   </div>
 </section>
 
+<section class="pane" id="p-calendario">
+  <div class="panel">
+    <h2>Quanto stai rispettando il piano</h2>
+    <p class="lede" id="adhLede"></p>
+    <div class="ref" id="adhTop"></div>
+  </div>
+  <div id="wkList"></div>
+  <div class="panel">
+    <h2>Come leggerlo</h2>
+    <p class="lede" style="margin:0">
+      L'aderenza è calcolata <strong>solo sul lavoro in bici</strong>. Le sedute di forza non
+      arrivano su Garmin, quindi contarle come mancate falserebbe il conto: restano indicate
+      ma escluse dal punteggio. Un'uscita registrata il giorno prima o dopo rispetto al piano
+      vale comunque come fatta, spostata.
+    </p>
+  </div>
+</section>
+
 <section class="pane" id="p-uscite">
   <div class="panel">
     <h2>Le tue potenze migliori</h2>
@@ -373,16 +424,9 @@ ol.rank li:first-child::before{background:var(--rosa);border-color:var(--rosa);c
     <div id="msg"></div>
   </div>
   <div class="panel">
-    <h2>Riferimenti</h2>
-    <p class="lede">Cambiano solo quello che vedi qui. Il piano su Drive e la sincronizzazione non si toccano.</p>
-    <div class="tiles">
-      <div class="tile"><div class="lab">Soglia</div>
-        <input class="inline" id="fFtp" type="number" inputmode="numeric" aria-label="FTP in watt">
-        <div class="foot">watt · aggiorna dopo ogni test</div></div>
-      <div class="tile"><div class="lab">Peso</div>
-        <input class="inline" id="fKg" type="number" step="0.1" inputmode="decimal" aria-label="Peso in chilogrammi">
-        <div class="foot">chilogrammi</div></div>
-    </div>
+    <h2>Riferimenti da Garmin</h2>
+    <p class="lede">Soglia e peso arrivano dal tuo account Garmin e non si modificano qui: fa fede il dato ufficiale. Aggiornali su Garmin e alla sincronizzazione successiva li ritrovi anche qui.</p>
+    <div class="ref" id="refBox"></div>
   </div>
   <div class="panel">
     <h2>Dove stanno i dati</h2>
@@ -1081,6 +1125,192 @@ function renderCmpTable(){
   $("#cmpTbl").innerHTML=h;
 }
 
+/* ===== calendario: previsto contro fatto ===== */
+const isForza=n=>/^(F1|F2|F3)\b|forza/i.test(n||"");
+
+function slotsOf(r){
+  const lun=r[C.n]>=22;
+  return [
+    {d:"lun",n:lun?r[C.gf]:"",m:lun?r[C.mf]:0},
+    {d:"mar",n:r[C.g1],m:r[C.m1]},
+    {d:"mer",n:r[C.g3],m:r[C.m3]},
+    {d:"gio",n:r[C.g2],m:r[C.m2]},
+    {d:"ven",n:lun?"":r[C.gf],m:lun?0:r[C.mf]},
+    {d:"sab",n:"",m:0},
+    {d:"dom",n:r[C.gw],m:r[C.mw]}
+  ];
+}
+const addDays=(iso,k)=>{const d=new Date(iso);d.setDate(d.getDate()+k);return d.toISOString().slice(0,10);};
+
+/**
+ * Abbina le sedute previste alle attività registrate.
+ * Prima gli incastri esatti sullo stesso giorno, poi quelli a un giorno di
+ * distanza: così un'uscita spostata dalla domenica al sabato non viene contata
+ * come mancata solo perché un altro slot se l'era già presa.
+ */
+function matchWeek(r, byDate){
+  const slots=slotsOf(r).map((s,i)=>({...s, date:addDays(r[C.dal],i),
+    forza:isForza(s.n), stato:null, act:null}));
+  const used=new Set();
+  const pool=[];
+  for(let k=-1;k<=7;k++){
+    const iso=addDays(r[C.dal],k);
+    (byDate[iso]||[]).forEach(a=>pool.push({iso,a}));
+  }
+  const bike=slots.filter(s=>s.n&&!s.forza);
+
+  bike.forEach(s=>{
+    const hit=pool.find(p=>p.iso===s.date&&!used.has(p.a.id));
+    if(hit){used.add(hit.a.id);s.stato="ok";s.act=hit.a;}
+  });
+  bike.forEach(s=>{
+    if(s.stato)return;
+    // fra i candidati a un giorno di distanza scelgo quello che somiglia di più
+    // alla seduta prevista come durata: evita che un giro occasionale si prenda
+    // il posto dell'allenamento vero fatto il giorno dopo.
+    const cand=pool.filter(p=>!used.has(p.a.id)&&
+      Math.abs((new Date(p.iso)-new Date(s.date))/864e5)<=1);
+    if(!cand.length)return;
+    cand.sort((x,y)=>{
+      const dx=Math.abs((new Date(x.iso)-new Date(s.date))/864e5);
+      const dy=Math.abs((new Date(y.iso)-new Date(s.date))/864e5);
+      if(dx!==dy)return dx-dy;
+      return Math.abs((x.a.duration_min||0)-(s.m||0)) -
+             Math.abs((y.a.duration_min||0)-(s.m||0));
+    });
+    used.add(cand[0].a.id); s.stato="mv"; s.act=cand[0].a;
+  });
+  bike.forEach(s=>{ if(!s.stato) s.stato = s.date>today() ? "fut" : "no"; });
+  slots.forEach(s=>{ if(s.n&&s.forza) s.stato="na"; });
+
+  const extra=pool.filter(p=>!used.has(p.a.id)&&p.iso>=r[C.dal]&&p.iso<=r[C.al]).map(p=>p.a);
+
+  const scad=bike.filter(s=>s.date<=today());
+  const fatte=scad.filter(s=>s.stato==="ok"||s.stato==="mv").length;
+  const minPrev=bike.reduce((a,s)=>a+(s.m||0),0);
+  const minFatti=[...bike.filter(s=>s.act).map(s=>s.act),...extra]
+    .reduce((a,x)=>a+(x.duration_min||0),0);
+
+  return {slots,extra,fatte,scadute:scad.length,minPrev,minFatti,
+    quota: scad.length? fatte/scad.length : null};
+}
+
+function indexActivities(){
+  const by={};
+  Object.values(DATA?.activities||{}).forEach(a=>{
+    if(!a.start_time)return;
+    const d=String(a.start_time).slice(0,10);
+    (by[d]=by[d]||[]).push(a);
+  });
+  return by;
+}
+
+function renderCalendario(){
+  const byDate=indexActivities();
+  const t=today();
+  const iniziato = t>=PIANO[0][C.dal];
+  const top=$("#adhTop"), list=$("#wkList");
+
+  if(!iniziato){
+    const gg=dayDiff(t,PIANO[0][C.dal]);
+    $("#adhLede").textContent=`Il piano comincia lunedì ${dd(PIANO[0][C.dal])}, fra ${gg} giorni. `+
+      `Da quel momento qui vedrai, giorno per giorno, cosa era previsto e cosa hai davvero fatto.`;
+    top.innerHTML="";
+    // anteprima della prima settimana
+    const r=PIANO[0];
+    list.innerHTML="";
+    list.appendChild(weekCard(r, matchWeek(r,byDate), true));
+    return;
+  }
+
+  const passate=PIANO.filter(r=>r[C.dal]<=t);
+  const res=passate.map(r=>({r,m:matchWeek(r,byDate)}));
+  const ultime=res.slice(-4);
+  const f=ultime.reduce((a,x)=>a+x.m.fatte,0), s=ultime.reduce((a,x)=>a+x.m.scadute,0);
+  const oreP=ultime.reduce((a,x)=>a+x.m.minPrev,0)/60;
+  const oreF=ultime.reduce((a,x)=>a+x.m.minFatti,0)/60;
+
+  $("#adhLede").textContent="Ultime quattro settimane di piano, considerando solo il lavoro in bici.";
+  top.innerHTML=`
+    <div><b>${s?nn(f/s*100):"—"}<span style="font-size:15px;color:var(--lime-dim)">%</span></b>
+      <span>sedute rispettate</span></div>
+    <div><b>${f}<span style="font-size:15px;color:var(--lime-dim)">/${s}</span></b>
+      <span>fatte su previste</span></div>
+    <div><b>${nn(oreF,1)}<span style="font-size:15px;color:var(--lime-dim)">/${nn(oreP,1)} h</span></b>
+      <span>ore in sella</span></div>`;
+
+  list.innerHTML="";
+  res.slice(-8).reverse().forEach(({r,m},i)=>list.appendChild(weekCard(r,m,i===0)));
+}
+
+function weekCard(r,m,open){
+  const corrente = today()>=r[C.dal] && today()<=r[C.al];
+  const cls={Carico:"carico",Scarico:"scarico",Test:"test",Gara:"gara",Taper:"taper"}[r[C.tipo]]||"";
+  const wrap=mk("div","wk");
+
+  const q=m.quota;
+  const col=q==null?"#26405E":q>=.85?"#93C24E":q>=.6?"#F2A93B":"#FF7095";
+  const seg=m.slots.filter(s=>s.n&&!s.forza);
+  const barra=seg.map(s=>{
+    const c={ok:"#93C24E",mv:"#F2A93B",no:"#FF7095",fut:"#1C2E45"}[s.stato]||"#1C2E45";
+    return `<i style="width:${100/Math.max(seg.length,1)}%;background:${c}"></i>`;
+  }).join("");
+
+  wrap.innerHTML=`
+    <div class="wk-head">
+      <div>
+        <div class="id">Settimana ${r[C.n]} ${corrente?'<span class="tag gara">in corso</span>':''}</div>
+        <div class="rng">${dd(r[C.dal])}–${dd(r[C.al])} · <span class="tag ${cls}">${r[C.tipo]}</span></div>
+      </div>
+      <div class="grow"></div>
+      <div class="wk-score">
+        <b style="color:${col}">${q==null?"—":nn(q*100)+"%"}</b>
+        <span>${m.fatte}/${m.scadute||seg.length}</span>
+      </div>
+    </div>
+    <div class="wk-bar">${barra}</div>
+    <div class="wk-body"></div>`;
+
+  const body=wrap.querySelector(".wk-body");
+  m.slots.forEach(s=>{
+    if(!s.n){ return; }
+    const badge={ok:["m-ok","fatta"],mv:["m-mv","spostata"],no:["m-no","saltata"],
+      na:["m-na","non tracciata"],fut:["m-na","da fare"]}[s.stato]||["m-na",""];
+    let real="";
+    if(s.act){
+      const a=s.act;
+      const bits=[a.start_time.slice(0,10).split("-").reverse().join("/")];
+      if(a.duration_min)bits.push(Math.round(a.duration_min)+"′");
+      if(a.distance_km)bits.push(nn(a.distance_km,1)+" km");
+      if(a.avg_power_w)bits.push(a.avg_power_w+" W");
+      if(a.tss)bits.push(nn(a.tss)+" punti");
+      real=`<div class="real">${bits.join(" · ")}</div>`;
+    } else if(s.stato==="no"){
+      real=`<div class="real">niente registrato su Garmin</div>`;
+    } else if(s.stato==="na"){
+      real=`<div class="real">a corpo libero, non arriva su Garmin</div>`;
+    }
+    const rowCls="row"+(s.stato==="no"?" past-no":"")+(s.stato==="fut"?" future":"");
+    body.appendChild(mk("div",rowCls,
+      `<div class="d">${s.d}</div>
+       <div><div class="plan">${esc(s.n)}${s.m?` <span style="color:var(--lime-dim);font-weight:500">${s.m}′</span>`:""}</div>${real}</div>
+       <div class="mark ${badge[0]}">${badge[1]}</div>`));
+  });
+  m.extra.forEach(a=>{
+    body.appendChild(mk("div","row",
+      `<div class="d">extra</div>
+       <div><div class="plan">${esc(a.name||"Uscita")}</div>
+        <div class="real">${a.start_time.slice(0,10).split("-").reverse().join("/")} · ${Math.round(a.duration_min||0)}′${a.distance_km?" · "+nn(a.distance_km,1)+" km":""}</div></div>
+       <div class="mark m-ex">in più</div>`));
+  });
+  if(!open) body.style.display="none";
+  wrap.querySelector(".wk-head").style.cursor="pointer";
+  wrap.querySelector(".wk-head").onclick=()=>{
+    body.style.display = body.style.display==="none" ? "" : "none";
+  };
+  return wrap;
+}
+
 /* ===== dati ===== */
 async function autoload(){
   const m=$("#msg");m.className="msg";m.textContent="Cerco i dati…";
@@ -1099,10 +1329,17 @@ async function autoload(){
   }
 }
 function pickRefs(){
-  const c=DATA?.current;
-  if(c?.ftp_watts)cfg.ftp=c.ftp_watts;
-  if(c?.weight_kg)cfg.kg=c.weight_kg;
-  $("#fFtp").value=cfg.ftp;$("#fKg").value=cfg.kg;
+  const c=DATA?.current||{};
+  if(c.ftp_watts)cfg.ftp=c.ftp_watts;
+  if(c.weight_kg)cfg.kg=c.weight_kg;
+  const box=$("#refBox");
+  if(!box)return;
+  box.innerHTML=`
+    <div><b>${cfg.ftp}<span style="font-size:15px;color:var(--lime-dim)"> W</span></b>
+      <span>soglia secondo Garmin</span></div>
+    <div><b>${nn(cfg.kg,1)}<span style="font-size:15px;color:var(--lime-dim)"> kg</span></b>
+      <span>${c.weight_date?"pesato il "+dd(c.weight_date):"peso"}</span></div>
+    <div><b>${nn(cfg.kg?cfg.ftp/cfg.kg:null,2)}</b><span>watt per chilo</span></div>`;
 }
 function readFiles(fl){
   const m=$("#msg");let n=0;
@@ -1131,7 +1368,7 @@ function paint(){
     renderForma(); renderCalendar(); renderZoneMix();
     renderUscite(); renderCmpTable();
   }
-  renderPiano(); renderSrc();
+  renderPiano(); renderCalendario(); renderSrc();
 }
 
 /* ===== avvio ===== */
@@ -1146,10 +1383,7 @@ $("#bPick").onclick=()=>$("#fPick").click();
 $("#fPick").onchange=e=>readFiles(e.target.files);
 $("#bClear").onclick=()=>{localStorage.removeItem(KEY);DATA=null;LOAD=null;
   $("#msg").className="msg good";$("#msg").textContent="Svuotato.";paint();};
-$("#fFtp").onchange=e=>{cfg.ftp=+e.target.value||cfg.ftp;save();paint();};
-$("#fKg").onchange=e=>{cfg.kg=+e.target.value||cfg.kg;save();paint();};
 
-$("#fFtp").value=cfg.ftp;$("#fKg").value=cfg.kg;
 drawSeason();
 restore()&&pickRefs();
 paint();
