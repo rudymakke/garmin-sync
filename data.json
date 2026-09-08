@@ -1,0 +1,1907 @@
+{
+  "wellness": {
+    "2026-08-19": {
+      "date": "2026-08-19",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 54,
+      "sleep_hours": 7.2,
+      "sleep_score": 79,
+      "body_battery_low": 32,
+      "body_battery_high": 86,
+      "stress_avg": 22,
+      "steps": 6719,
+      "training_readiness": null
+    },
+    "2026-08-20": {
+      "date": "2026-08-20",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 52,
+      "sleep_hours": 6.2,
+      "sleep_score": 57,
+      "body_battery_low": 22,
+      "body_battery_high": 87,
+      "stress_avg": 27,
+      "steps": 7595,
+      "training_readiness": null
+    },
+    "2026-08-21": {
+      "date": "2026-08-21",
+      "resting_hr": 45,
+      "hrv_overnight_ms": 46,
+      "sleep_hours": 5.2,
+      "sleep_score": 65,
+      "body_battery_low": 21,
+      "body_battery_high": 71,
+      "stress_avg": 26,
+      "steps": 7026,
+      "training_readiness": null
+    },
+    "2026-08-22": {
+      "date": "2026-08-22",
+      "resting_hr": 44,
+      "hrv_overnight_ms": 51,
+      "sleep_hours": 7.2,
+      "sleep_score": 76,
+      "body_battery_low": 26,
+      "body_battery_high": 86,
+      "stress_avg": 25,
+      "steps": 11332,
+      "training_readiness": null
+    },
+    "2026-08-23": {
+      "date": "2026-08-23",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 50,
+      "sleep_hours": 6.8,
+      "sleep_score": 74,
+      "body_battery_low": 20,
+      "body_battery_high": 85,
+      "stress_avg": 31,
+      "steps": 10052,
+      "training_readiness": null
+    },
+    "2026-08-24": {
+      "date": "2026-08-24",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 56,
+      "sleep_hours": 6.9,
+      "sleep_score": 60,
+      "body_battery_low": 30,
+      "body_battery_high": 89,
+      "stress_avg": 17,
+      "steps": 6948,
+      "training_readiness": null
+    },
+    "2026-08-25": {
+      "date": "2026-08-25",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 55,
+      "sleep_hours": 7.0,
+      "sleep_score": 74,
+      "body_battery_low": 23,
+      "body_battery_high": 97,
+      "stress_avg": 26,
+      "steps": 7772,
+      "training_readiness": null
+    },
+    "2026-08-26": {
+      "date": "2026-08-26",
+      "resting_hr": 44,
+      "hrv_overnight_ms": 46,
+      "sleep_hours": 5.6,
+      "sleep_score": 57,
+      "body_battery_low": 15,
+      "body_battery_high": 67,
+      "stress_avg": 27,
+      "steps": 6488,
+      "training_readiness": null
+    },
+    "2026-08-27": {
+      "date": "2026-08-27",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 51,
+      "sleep_hours": 6.5,
+      "sleep_score": 74,
+      "body_battery_low": 12,
+      "body_battery_high": 79,
+      "stress_avg": 34,
+      "steps": 6111,
+      "training_readiness": null
+    },
+    "2026-08-28": {
+      "date": "2026-08-28",
+      "resting_hr": 44,
+      "hrv_overnight_ms": 52,
+      "sleep_hours": 6.1,
+      "sleep_score": 57,
+      "body_battery_low": 19,
+      "body_battery_high": 71,
+      "stress_avg": 26,
+      "steps": 5884,
+      "training_readiness": null
+    },
+    "2026-08-29": {
+      "date": "2026-08-29",
+      "resting_hr": 46,
+      "hrv_overnight_ms": 45,
+      "sleep_hours": 6.7,
+      "sleep_score": 57,
+      "body_battery_low": 18,
+      "body_battery_high": 67,
+      "stress_avg": 30,
+      "steps": 7512,
+      "training_readiness": null
+    },
+    "2026-08-30": {
+      "date": "2026-08-30",
+      "resting_hr": 44,
+      "hrv_overnight_ms": 49,
+      "sleep_hours": 7.4,
+      "sleep_score": 79,
+      "body_battery_low": 18,
+      "body_battery_high": 83,
+      "stress_avg": 30,
+      "steps": 5607,
+      "training_readiness": null
+    },
+    "2026-08-31": {
+      "date": "2026-08-31",
+      "resting_hr": 44,
+      "hrv_overnight_ms": 56,
+      "sleep_hours": 5.5,
+      "sleep_score": 67,
+      "body_battery_low": 23,
+      "body_battery_high": 77,
+      "stress_avg": 23,
+      "steps": 5997,
+      "training_readiness": null
+    },
+    "2026-09-01": {
+      "date": "2026-09-01",
+      "resting_hr": 45,
+      "hrv_overnight_ms": 45,
+      "sleep_hours": 7.0,
+      "sleep_score": 77,
+      "body_battery_low": 27,
+      "body_battery_high": 82,
+      "stress_avg": 25,
+      "steps": 9622,
+      "training_readiness": null
+    },
+    "2026-09-02": {
+      "date": "2026-09-02",
+      "resting_hr": 45,
+      "hrv_overnight_ms": 51,
+      "sleep_hours": 6.8,
+      "sleep_score": 75,
+      "body_battery_low": 34,
+      "body_battery_high": 81,
+      "stress_avg": 21,
+      "steps": 5255,
+      "training_readiness": null
+    },
+    "2026-09-03": {
+      "date": "2026-09-03",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 56,
+      "sleep_hours": 6.4,
+      "sleep_score": 77,
+      "body_battery_low": 37,
+      "body_battery_high": 97,
+      "stress_avg": 20,
+      "steps": 7525,
+      "training_readiness": null
+    },
+    "2026-09-04": {
+      "date": "2026-09-04",
+      "resting_hr": 47,
+      "hrv_overnight_ms": 42,
+      "sleep_hours": 6.0,
+      "sleep_score": 55,
+      "body_battery_low": 24,
+      "body_battery_high": 65,
+      "stress_avg": 26,
+      "steps": 6325,
+      "training_readiness": null
+    },
+    "2026-09-05": {
+      "date": "2026-09-05",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 49,
+      "sleep_hours": 7.9,
+      "sleep_score": 67,
+      "body_battery_low": 20,
+      "body_battery_high": 86,
+      "stress_avg": 29,
+      "steps": 8989,
+      "training_readiness": null
+    },
+    "2026-09-06": {
+      "date": "2026-09-06",
+      "resting_hr": 44,
+      "hrv_overnight_ms": 42,
+      "sleep_hours": 6.0,
+      "sleep_score": 67,
+      "body_battery_low": 11,
+      "body_battery_high": 67,
+      "stress_avg": 32,
+      "steps": 8426,
+      "training_readiness": null
+    },
+    "2026-09-07": {
+      "date": "2026-09-07",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 47,
+      "sleep_hours": 7.3,
+      "sleep_score": 81,
+      "body_battery_low": 26,
+      "body_battery_high": 80,
+      "stress_avg": 20,
+      "steps": 7051,
+      "training_readiness": null
+    },
+    "2026-09-08": {
+      "date": "2026-09-08",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 52,
+      "sleep_hours": 6.5,
+      "sleep_score": 77,
+      "body_battery_low": 49,
+      "body_battery_high": 98,
+      "stress_avg": 21,
+      "steps": 1539,
+      "training_readiness": null
+    },
+    "2026-07-11": {
+      "date": "2026-07-11",
+      "resting_hr": 46,
+      "hrv_overnight_ms": 40,
+      "sleep_hours": 7.7,
+      "sleep_score": 70,
+      "body_battery_low": 8,
+      "body_battery_high": 60,
+      "stress_avg": 29,
+      "steps": 9976,
+      "training_readiness": null
+    },
+    "2026-07-12": {
+      "date": "2026-07-12",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 46,
+      "sleep_hours": 6.3,
+      "sleep_score": 65,
+      "body_battery_low": 18,
+      "body_battery_high": 78,
+      "stress_avg": 29,
+      "steps": 7864,
+      "training_readiness": null
+    },
+    "2026-07-13": {
+      "date": "2026-07-13",
+      "resting_hr": 46,
+      "hrv_overnight_ms": 47,
+      "sleep_hours": 8.8,
+      "sleep_score": 87,
+      "body_battery_low": 20,
+      "body_battery_high": 80,
+      "stress_avg": 28,
+      "steps": 8080,
+      "training_readiness": null
+    },
+    "2026-07-14": {
+      "date": "2026-07-14",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 50,
+      "sleep_hours": 8.2,
+      "sleep_score": 84,
+      "body_battery_low": 26,
+      "body_battery_high": 89,
+      "stress_avg": 29,
+      "steps": 8822,
+      "training_readiness": null
+    },
+    "2026-07-15": {
+      "date": "2026-07-15",
+      "resting_hr": 45,
+      "hrv_overnight_ms": 51,
+      "sleep_hours": 4.9,
+      "sleep_score": 63,
+      "body_battery_low": 21,
+      "body_battery_high": 74,
+      "stress_avg": 24,
+      "steps": 10057,
+      "training_readiness": null
+    },
+    "2026-07-16": {
+      "date": "2026-07-16",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 47,
+      "sleep_hours": 5.3,
+      "sleep_score": 56,
+      "body_battery_low": 7,
+      "body_battery_high": 69,
+      "stress_avg": 34,
+      "steps": 10472,
+      "training_readiness": null
+    },
+    "2026-07-17": {
+      "date": "2026-07-17",
+      "resting_hr": 45,
+      "hrv_overnight_ms": 49,
+      "sleep_hours": 7.0,
+      "sleep_score": 72,
+      "body_battery_low": 13,
+      "body_battery_high": 74,
+      "stress_avg": 26,
+      "steps": 9670,
+      "training_readiness": null
+    },
+    "2026-07-18": {
+      "date": "2026-07-18",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 46,
+      "sleep_hours": 4.9,
+      "sleep_score": 61,
+      "body_battery_low": 13,
+      "body_battery_high": 66,
+      "stress_avg": 28,
+      "steps": 8691,
+      "training_readiness": null
+    },
+    "2026-07-19": {
+      "date": "2026-07-19",
+      "resting_hr": 46,
+      "hrv_overnight_ms": 45,
+      "sleep_hours": 7.8,
+      "sleep_score": 69,
+      "body_battery_low": 15,
+      "body_battery_high": 79,
+      "stress_avg": 19,
+      "steps": 7016,
+      "training_readiness": null
+    },
+    "2026-07-20": {
+      "date": "2026-07-20",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 64,
+      "sleep_hours": 4.8,
+      "sleep_score": 59,
+      "body_battery_low": 27,
+      "body_battery_high": 85,
+      "stress_avg": 20,
+      "steps": 5385,
+      "training_readiness": null
+    },
+    "2026-07-21": {
+      "date": "2026-07-21",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 63,
+      "sleep_hours": 6.9,
+      "sleep_score": 81,
+      "body_battery_low": 25,
+      "body_battery_high": 94,
+      "stress_avg": 25,
+      "steps": 5896,
+      "training_readiness": null
+    },
+    "2026-07-22": {
+      "date": "2026-07-22",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 53,
+      "sleep_hours": 7.1,
+      "sleep_score": 79,
+      "body_battery_low": 23,
+      "body_battery_high": 86,
+      "stress_avg": 26,
+      "steps": 6778,
+      "training_readiness": null
+    },
+    "2026-07-23": {
+      "date": "2026-07-23",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 53,
+      "sleep_hours": 5.7,
+      "sleep_score": 74,
+      "body_battery_low": 15,
+      "body_battery_high": 84,
+      "stress_avg": 30,
+      "steps": 9719,
+      "training_readiness": null
+    },
+    "2026-07-24": {
+      "date": "2026-07-24",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 51,
+      "sleep_hours": 7.6,
+      "sleep_score": 79,
+      "body_battery_low": 20,
+      "body_battery_high": 85,
+      "stress_avg": 23,
+      "steps": 6798,
+      "training_readiness": null
+    },
+    "2026-07-25": {
+      "date": "2026-07-25",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 57,
+      "sleep_hours": 5.5,
+      "sleep_score": 64,
+      "body_battery_low": 24,
+      "body_battery_high": 81,
+      "stress_avg": 23,
+      "steps": 10925,
+      "training_readiness": null
+    },
+    "2026-07-26": {
+      "date": "2026-07-26",
+      "resting_hr": 45,
+      "hrv_overnight_ms": 49,
+      "sleep_hours": 5.7,
+      "sleep_score": 59,
+      "body_battery_low": 19,
+      "body_battery_high": 63,
+      "stress_avg": 23,
+      "steps": 8761,
+      "training_readiness": null
+    },
+    "2026-07-27": {
+      "date": "2026-07-27",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 54,
+      "sleep_hours": 5.7,
+      "sleep_score": 73,
+      "body_battery_low": 10,
+      "body_battery_high": 82,
+      "stress_avg": 33,
+      "steps": 7910,
+      "training_readiness": null
+    },
+    "2026-07-28": {
+      "date": "2026-07-28",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 50,
+      "sleep_hours": 7.0,
+      "sleep_score": 76,
+      "body_battery_low": 10,
+      "body_battery_high": 78,
+      "stress_avg": 23,
+      "steps": 6064,
+      "training_readiness": null
+    },
+    "2026-07-29": {
+      "date": "2026-07-29",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 52,
+      "sleep_hours": 7.3,
+      "sleep_score": 80,
+      "body_battery_low": 26,
+      "body_battery_high": 93,
+      "stress_avg": 21,
+      "steps": 7241,
+      "training_readiness": null
+    },
+    "2026-07-30": {
+      "date": "2026-07-30",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 64,
+      "sleep_hours": 7.7,
+      "sleep_score": 84,
+      "body_battery_low": 22,
+      "body_battery_high": 100,
+      "stress_avg": 26,
+      "steps": 11184,
+      "training_readiness": null
+    },
+    "2026-07-31": {
+      "date": "2026-07-31",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 46,
+      "sleep_hours": 6.2,
+      "sleep_score": 73,
+      "body_battery_low": 21,
+      "body_battery_high": 79,
+      "stress_avg": 24,
+      "steps": 9866,
+      "training_readiness": null
+    },
+    "2026-08-01": {
+      "date": "2026-08-01",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 46,
+      "sleep_hours": 6.4,
+      "sleep_score": 59,
+      "body_battery_low": 20,
+      "body_battery_high": 78,
+      "stress_avg": 25,
+      "steps": 11891,
+      "training_readiness": null
+    },
+    "2026-08-02": {
+      "date": "2026-08-02",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 47,
+      "sleep_hours": 6.1,
+      "sleep_score": 72,
+      "body_battery_low": 15,
+      "body_battery_high": 76,
+      "stress_avg": 29,
+      "steps": 12752,
+      "training_readiness": null
+    },
+    "2026-08-03": {
+      "date": "2026-08-03",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 51,
+      "sleep_hours": 6.5,
+      "sleep_score": 77,
+      "body_battery_low": 19,
+      "body_battery_high": 89,
+      "stress_avg": 16,
+      "steps": 7510,
+      "training_readiness": null
+    },
+    "2026-08-04": {
+      "date": "2026-08-04",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 62,
+      "sleep_hours": 8.4,
+      "sleep_score": 89,
+      "body_battery_low": 34,
+      "body_battery_high": 100,
+      "stress_avg": 18,
+      "steps": 8560,
+      "training_readiness": null
+    },
+    "2026-08-05": {
+      "date": "2026-08-05",
+      "resting_hr": 38,
+      "hrv_overnight_ms": 66,
+      "sleep_hours": 6.8,
+      "sleep_score": 69,
+      "body_battery_low": 26,
+      "body_battery_high": 98,
+      "stress_avg": 23,
+      "steps": 8505,
+      "training_readiness": null
+    },
+    "2026-08-06": {
+      "date": "2026-08-06",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 58,
+      "sleep_hours": 6.6,
+      "sleep_score": 73,
+      "body_battery_low": 27,
+      "body_battery_high": 91,
+      "stress_avg": 23,
+      "steps": 9889,
+      "training_readiness": null
+    },
+    "2026-08-07": {
+      "date": "2026-08-07",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 55,
+      "sleep_hours": 8.3,
+      "sleep_score": 86,
+      "body_battery_low": 28,
+      "body_battery_high": 94,
+      "stress_avg": 23,
+      "steps": 9196,
+      "training_readiness": null
+    },
+    "2026-08-08": {
+      "date": "2026-08-08",
+      "resting_hr": 44,
+      "hrv_overnight_ms": 49,
+      "sleep_hours": 5.9,
+      "sleep_score": 56,
+      "body_battery_low": 19,
+      "body_battery_high": 72,
+      "stress_avg": 26,
+      "steps": 9477,
+      "training_readiness": null
+    },
+    "2026-08-09": {
+      "date": "2026-08-09",
+      "resting_hr": 39,
+      "hrv_overnight_ms": 52,
+      "sleep_hours": 7.2,
+      "sleep_score": 79,
+      "body_battery_low": 17,
+      "body_battery_high": 84,
+      "stress_avg": 29,
+      "steps": 10248,
+      "training_readiness": null
+    },
+    "2026-08-10": {
+      "date": "2026-08-10",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 63,
+      "sleep_hours": 6.2,
+      "sleep_score": 71,
+      "body_battery_low": 23,
+      "body_battery_high": 87,
+      "stress_avg": 19,
+      "steps": 8656,
+      "training_readiness": null
+    },
+    "2026-08-11": {
+      "date": "2026-08-11",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 57,
+      "sleep_hours": 7.4,
+      "sleep_score": 83,
+      "body_battery_low": 28,
+      "body_battery_high": 96,
+      "stress_avg": 22,
+      "steps": 8262,
+      "training_readiness": null
+    },
+    "2026-08-12": {
+      "date": "2026-08-12",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 58,
+      "sleep_hours": 7.0,
+      "sleep_score": 75,
+      "body_battery_low": 30,
+      "body_battery_high": 95,
+      "stress_avg": 20,
+      "steps": 9984,
+      "training_readiness": null
+    },
+    "2026-08-13": {
+      "date": "2026-08-13",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 59,
+      "sleep_hours": 6.0,
+      "sleep_score": 56,
+      "body_battery_low": 32,
+      "body_battery_high": 88,
+      "stress_avg": 20,
+      "steps": 7507,
+      "training_readiness": null
+    },
+    "2026-08-14": {
+      "date": "2026-08-14",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 65,
+      "sleep_hours": 5.7,
+      "sleep_score": 71,
+      "body_battery_low": 21,
+      "body_battery_high": 92,
+      "stress_avg": 26,
+      "steps": 9280,
+      "training_readiness": null
+    },
+    "2026-08-15": {
+      "date": "2026-08-15",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 58,
+      "sleep_hours": 7.2,
+      "sleep_score": 63,
+      "body_battery_low": 32,
+      "body_battery_high": 87,
+      "stress_avg": 19,
+      "steps": 7883,
+      "training_readiness": null
+    },
+    "2026-08-16": {
+      "date": "2026-08-16",
+      "resting_hr": 43,
+      "hrv_overnight_ms": 59,
+      "sleep_hours": 8.2,
+      "sleep_score": 81,
+      "body_battery_low": 35,
+      "body_battery_high": 99,
+      "stress_avg": 20,
+      "steps": 8996,
+      "training_readiness": null
+    },
+    "2026-08-17": {
+      "date": "2026-08-17",
+      "resting_hr": 40,
+      "hrv_overnight_ms": 62,
+      "sleep_hours": 7.1,
+      "sleep_score": 75,
+      "body_battery_low": 34,
+      "body_battery_high": 96,
+      "stress_avg": 22,
+      "steps": 6627,
+      "training_readiness": null
+    },
+    "2026-08-18": {
+      "date": "2026-08-18",
+      "resting_hr": 38,
+      "hrv_overnight_ms": 68,
+      "sleep_hours": 6.7,
+      "sleep_score": 61,
+      "body_battery_low": 31,
+      "body_battery_high": 97,
+      "stress_avg": 22,
+      "steps": 6129,
+      "training_readiness": null
+    }
+  },
+  "activities": {
+    "24080304392": {
+      "id": 24080304392,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-08-23 06:38:31",
+      "duration_min": 120.2,
+      "distance_km": 43.81,
+      "calories": 1212.0,
+      "avg_hr": 139.0,
+      "max_hr": 172.0,
+      "training_effect_aerobic": 4.5,
+      "training_effect_anaerobic": 1.1,
+      "avg_power_w": 144,
+      "max_power_w": 449,
+      "normalized_power_w": 187,
+      "avg_cadence": 79,
+      "max_cadence": 101,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 48.8,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 21.4,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 25.8,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 18.6,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 3.6,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 1.8,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.2,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 19.7,
+          "low": 97
+        },
+        {
+          "zone": 2,
+          "minutes": 25.4,
+          "low": 116
+        },
+        {
+          "zone": 3,
+          "minutes": 34.1,
+          "low": 136
+        },
+        {
+          "zone": 4,
+          "minutes": 38.6,
+          "low": 155
+        }
+      ],
+      "power_curve": {
+        "5min": 236,
+        "10min": 230,
+        "20min": 221,
+        "30min": 218,
+        "45min": 192,
+        "60min": 180
+      },
+      "tss": 132.4,
+      "tss_source": "power"
+    },
+    "24131744658": {
+      "id": 24131744658,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-08-27 06:05:53",
+      "duration_min": 55.9,
+      "distance_km": 23.61,
+      "calories": 568.0,
+      "avg_hr": 146.0,
+      "max_hr": 175.0,
+      "training_effect_aerobic": 3.3,
+      "training_effect_anaerobic": 1.8,
+      "avg_power_w": 167,
+      "max_power_w": 643,
+      "normalized_power_w": 185,
+      "avg_cadence": 82,
+      "max_cadence": 105,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 24.3,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 11.5,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 9.6,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 6.7,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 1.8,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 1.7,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.2,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 2.1,
+          "low": 97
+        },
+        {
+          "zone": 2,
+          "minutes": 9.9,
+          "low": 116
+        },
+        {
+          "zone": 3,
+          "minutes": 22.7,
+          "low": 136
+        },
+        {
+          "zone": 4,
+          "minutes": 20.4,
+          "low": 155
+        },
+        {
+          "zone": 5,
+          "minutes": 0.3,
+          "low": 175
+        }
+      ],
+      "power_curve": {
+        "5min": 217,
+        "10min": 176,
+        "20min": 163,
+        "30min": 157,
+        "45min": 152
+      },
+      "tss": 60.3,
+      "tss_source": "power"
+    },
+    "24169628208": {
+      "id": 24169628208,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-08-30 07:26:54",
+      "duration_min": 227.6,
+      "distance_km": 85.37,
+      "calories": 2111.0,
+      "avg_hr": 141.0,
+      "max_hr": 182.0,
+      "training_effect_aerobic": 4.8,
+      "training_effect_anaerobic": 1.9,
+      "avg_power_w": 150,
+      "max_power_w": 392,
+      "normalized_power_w": 163,
+      "avg_cadence": 76,
+      "max_cadence": 105,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 109.2,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 63.6,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 34.8,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 13.8,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 4.1,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 1.9,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.1,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 15.5,
+          "low": 97
+        },
+        {
+          "zone": 2,
+          "minutes": 59.3,
+          "low": 116
+        },
+        {
+          "zone": 3,
+          "minutes": 106.6,
+          "low": 136
+        },
+        {
+          "zone": 4,
+          "minutes": 40.8,
+          "low": 155
+        },
+        {
+          "zone": 5,
+          "minutes": 3.4,
+          "low": 175
+        }
+      ],
+      "power_curve": {
+        "5min": 227,
+        "10min": 217,
+        "20min": 195,
+        "30min": 176,
+        "45min": 160,
+        "60min": 160
+      },
+      "tss": 190.5,
+      "tss_source": "power"
+    },
+    "24254369096": {
+      "id": 24254369096,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-09-06 06:58:01",
+      "duration_min": 79.3,
+      "distance_km": 31.46,
+      "calories": 826.0,
+      "avg_hr": 144.0,
+      "max_hr": 179.0,
+      "training_effect_aerobic": 4.1,
+      "training_effect_anaerobic": 1.9,
+      "avg_power_w": 178,
+      "max_power_w": 434,
+      "normalized_power_w": 193,
+      "avg_cadence": 79,
+      "max_cadence": 100,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 28.9,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 11.6,
+          "low": 125
+        },
+        {
+          "zone": 3,
+          "minutes": 10.7,
+          "low": 172
+        },
+        {
+          "zone": 4,
+          "minutes": 14.5,
+          "low": 203
+        },
+        {
+          "zone": 5,
+          "minutes": 8.2,
+          "low": 240
+        },
+        {
+          "zone": 6,
+          "minutes": 4.9,
+          "low": 270
+        },
+        {
+          "zone": 7,
+          "minutes": 0.7,
+          "low": 341
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 8.1,
+          "low": 97
+        },
+        {
+          "zone": 2,
+          "minutes": 16.8,
+          "low": 116
+        },
+        {
+          "zone": 3,
+          "minutes": 26.1,
+          "low": 136
+        },
+        {
+          "zone": 4,
+          "minutes": 24.4,
+          "low": 155
+        },
+        {
+          "zone": 5,
+          "minutes": 3.4,
+          "low": 175
+        }
+      ],
+      "power_curve": {
+        "5min": 243,
+        "10min": 241,
+        "20min": 199,
+        "30min": 188,
+        "45min": 168,
+        "60min": 144
+      },
+      "tss": 93.1,
+      "tss_source": "power"
+    },
+    "23970322764": {
+      "id": 23970322764,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-08-14 05:54:07",
+      "duration_min": 121.1,
+      "distance_km": 43.74,
+      "calories": 1231.0,
+      "avg_hr": 139.0,
+      "max_hr": 178.0,
+      "training_effect_aerobic": 4.0,
+      "training_effect_anaerobic": 2.0,
+      "avg_power_w": 145,
+      "max_power_w": 411,
+      "normalized_power_w": 186,
+      "avg_cadence": 79,
+      "max_cadence": 100,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 48.3,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 23.0,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 25.5,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 18.5,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 4.0,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 1.7,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.1,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 22.8,
+          "low": 97
+        },
+        {
+          "zone": 2,
+          "minutes": 22.9,
+          "low": 116
+        },
+        {
+          "zone": 3,
+          "minutes": 41.2,
+          "low": 136
+        },
+        {
+          "zone": 4,
+          "minutes": 32.6,
+          "low": 155
+        },
+        {
+          "zone": 5,
+          "minutes": 0.8,
+          "low": 175
+        }
+      ],
+      "power_curve": {
+        "5min": 236,
+        "10min": 225,
+        "20min": 207,
+        "30min": 201,
+        "45min": 186,
+        "60min": 175
+      },
+      "tss": 132.0,
+      "tss_source": "power"
+    },
+    "23907454646": {
+      "id": 23907454646,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-08-09 06:38:16",
+      "duration_min": 189.7,
+      "distance_km": 67.83,
+      "calories": 1777.0,
+      "avg_hr": 140.0,
+      "max_hr": 172.0,
+      "training_effect_aerobic": 4.3,
+      "training_effect_anaerobic": 1.4,
+      "avg_power_w": 132,
+      "max_power_w": 447,
+      "normalized_power_w": 170,
+      "avg_cadence": 74,
+      "max_cadence": 104,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 84.0,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 45.6,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 40.7,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 14.8,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 3.0,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 1.5,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.2,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 23.9,
+          "low": 97
+        },
+        {
+          "zone": 2,
+          "minutes": 46.0,
+          "low": 116
+        },
+        {
+          "zone": 3,
+          "minutes": 61.9,
+          "low": 136
+        },
+        {
+          "zone": 4,
+          "minutes": 55.3,
+          "low": 155
+        }
+      ],
+      "power_curve": {
+        "5min": 211,
+        "10min": 204,
+        "20min": 199,
+        "30min": 197,
+        "45min": 181,
+        "60min": 163
+      },
+      "tss": 172.7,
+      "tss_source": "power"
+    },
+    "23870339950": {
+      "id": 23870339950,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-08-06 06:20:05",
+      "duration_min": 61.9,
+      "distance_km": 25.64,
+      "calories": 619.0,
+      "avg_hr": 134.0,
+      "max_hr": 177.0,
+      "training_effect_aerobic": 3.3,
+      "training_effect_anaerobic": 2.4,
+      "avg_power_w": 142,
+      "max_power_w": 719,
+      "normalized_power_w": 206,
+      "avg_cadence": 82,
+      "max_cadence": 108,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 30.9,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 11.2,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 7.1,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 6.0,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 2.5,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 2.9,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 1.3,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 8.6,
+          "low": 97
+        },
+        {
+          "zone": 2,
+          "minutes": 23.2,
+          "low": 116
+        },
+        {
+          "zone": 3,
+          "minutes": 19.8,
+          "low": 136
+        },
+        {
+          "zone": 4,
+          "minutes": 9.0,
+          "low": 155
+        },
+        {
+          "zone": 5,
+          "minutes": 0.4,
+          "low": 175
+        }
+      ],
+      "power_curve": {
+        "5min": 228,
+        "10min": 196,
+        "20min": 173,
+        "30min": 161,
+        "45min": 150,
+        "60min": 141
+      },
+      "tss": 82.8,
+      "tss_source": "power"
+    },
+    "23820119301": {
+      "id": 23820119301,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-08-02 06:17:50",
+      "duration_min": 172.7,
+      "distance_km": 59.87,
+      "calories": 1766.0,
+      "avg_hr": 141.0,
+      "max_hr": 174.0,
+      "training_effect_aerobic": 5.0,
+      "training_effect_anaerobic": 2.1,
+      "avg_power_w": 146,
+      "max_power_w": 530,
+      "normalized_power_w": 187,
+      "avg_cadence": 75,
+      "max_cadence": 100,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 64.8,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 35.9,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 40.0,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 25.8,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 4.2,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 1.6,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.4,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 32.5,
+          "low": 98
+        },
+        {
+          "zone": 2,
+          "minutes": 29.5,
+          "low": 117
+        },
+        {
+          "zone": 3,
+          "minutes": 47.3,
+          "low": 137
+        },
+        {
+          "zone": 4,
+          "minutes": 62.6,
+          "low": 156
+        }
+      ],
+      "power_curve": {
+        "5min": 239,
+        "10min": 229,
+        "20min": 218,
+        "30min": 213,
+        "45min": 206,
+        "60min": 191
+      },
+      "tss": 190.3,
+      "tss_source": "power"
+    },
+    "23745711172": {
+      "id": 23745711172,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-07-27 05:26:09",
+      "duration_min": 84.7,
+      "distance_km": 33.07,
+      "calories": 859.0,
+      "avg_hr": 134.0,
+      "max_hr": 171.0,
+      "training_effect_aerobic": 3.7,
+      "training_effect_anaerobic": 2.0,
+      "avg_power_w": 146,
+      "max_power_w": 553,
+      "normalized_power_w": 189,
+      "avg_cadence": 79,
+      "max_cadence": 100,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 35.0,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 16.1,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 13.9,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 13.2,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 4.0,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 1.1,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.4,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 11.9,
+          "low": 98
+        },
+        {
+          "zone": 2,
+          "minutes": 25.9,
+          "low": 117
+        },
+        {
+          "zone": 3,
+          "minutes": 29.0,
+          "low": 137
+        },
+        {
+          "zone": 4,
+          "minutes": 12.7,
+          "low": 156
+        }
+      ],
+      "power_curve": {
+        "5min": 237,
+        "10min": 221,
+        "20min": 209,
+        "30min": 183,
+        "45min": 170,
+        "60min": 153
+      },
+      "tss": 95.3,
+      "tss_source": "power"
+    },
+    "23698445746": {
+      "id": 23698445746,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-07-23 05:21:17",
+      "duration_min": 78.0,
+      "distance_km": 31.39,
+      "calories": 817.0,
+      "avg_hr": 139.0,
+      "max_hr": 171.0,
+      "training_effect_aerobic": 3.8,
+      "training_effect_anaerobic": 1.9,
+      "avg_power_w": 150,
+      "max_power_w": 412,
+      "normalized_power_w": 185,
+      "avg_cadence": 80,
+      "max_cadence": 101,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 29.5,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 14.5,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 19.1,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 12.0,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 2.0,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 0.8,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.1,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 10.6,
+          "low": 98
+        },
+        {
+          "zone": 2,
+          "minutes": 22.4,
+          "low": 117
+        },
+        {
+          "zone": 3,
+          "minutes": 21.7,
+          "low": 137
+        },
+        {
+          "zone": 4,
+          "minutes": 22.4,
+          "low": 156
+        }
+      ],
+      "power_curve": {
+        "5min": 232,
+        "10min": 226,
+        "20min": 200,
+        "30min": 182,
+        "45min": 168,
+        "60min": 157
+      },
+      "tss": 84.1,
+      "tss_source": "power"
+    },
+    "23672537464": {
+      "id": 23672537464,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-07-21 05:30:52",
+      "duration_min": 57.4,
+      "distance_km": 23.67,
+      "calories": 555.0,
+      "avg_hr": 131.0,
+      "max_hr": 159.0,
+      "training_effect_aerobic": 3.0,
+      "training_effect_anaerobic": 0.7,
+      "avg_power_w": 137,
+      "max_power_w": 359,
+      "normalized_power_w": 167,
+      "avg_cadence": 82,
+      "max_cadence": 98,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 25.9,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 15.4,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 10.1,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 4.3,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 1.1,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 0.6,
+          "low": 298
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 7.8,
+          "low": 98
+        },
+        {
+          "zone": 2,
+          "minutes": 26.7,
+          "low": 117
+        },
+        {
+          "zone": 3,
+          "minutes": 20.3,
+          "low": 137
+        },
+        {
+          "zone": 4,
+          "minutes": 1.4,
+          "low": 156
+        }
+      ],
+      "power_curve": {
+        "5min": 183,
+        "10min": 155,
+        "20min": 152,
+        "30min": 150,
+        "45min": 144
+      },
+      "tss": 50.4,
+      "tss_source": "power"
+    },
+    "23638218270": {
+      "id": 23638218270,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-07-18 05:49:43",
+      "duration_min": 209.4,
+      "distance_km": 73.66,
+      "calories": 2021.0,
+      "avg_hr": 145.0,
+      "max_hr": 179.0,
+      "training_effect_aerobic": 5.0,
+      "training_effect_anaerobic": 1.5,
+      "avg_power_w": 137,
+      "max_power_w": 694,
+      "normalized_power_w": 177,
+      "avg_cadence": 76,
+      "max_cadence": 103,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 85.9,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 47.9,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 47.4,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 22.2,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 3.7,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 1.9,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.3,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 26.8,
+          "low": 98
+        },
+        {
+          "zone": 2,
+          "minutes": 38.2,
+          "low": 117
+        },
+        {
+          "zone": 3,
+          "minutes": 59.3,
+          "low": 137
+        },
+        {
+          "zone": 4,
+          "minutes": 79.4,
+          "low": 156
+        },
+        {
+          "zone": 5,
+          "minutes": 3.4,
+          "low": 176
+        }
+      ],
+      "power_curve": {
+        "5min": 227,
+        "10min": 216,
+        "20min": 195,
+        "30min": 191,
+        "45min": 182,
+        "60min": 183
+      },
+      "tss": 206.7,
+      "tss_source": "power"
+    },
+    "23616260999": {
+      "id": 23616260999,
+      "name": "Genova Sup",
+      "type": "stand_up_paddleboarding_v2",
+      "start_time": "2026-07-16 09:58:11",
+      "duration_min": 63.3,
+      "distance_km": 2.26,
+      "calories": 300.0,
+      "avg_hr": 97.0,
+      "max_hr": 132.0,
+      "training_effect_aerobic": 0.9,
+      "training_effect_anaerobic": 0.0,
+      "tss": 19.0,
+      "tss_source": "stima_da_training_effect"
+    },
+    "23615269852": {
+      "id": 23615269852,
+      "name": "Genova Ciclismo su strada",
+      "type": "road_biking",
+      "start_time": "2026-07-16 06:10:15",
+      "duration_min": 125.9,
+      "distance_km": 44.03,
+      "calories": 1229.0,
+      "avg_hr": 142.0,
+      "max_hr": 179.0,
+      "training_effect_aerobic": 3.9,
+      "training_effect_anaerobic": 1.8,
+      "avg_power_w": 138,
+      "max_power_w": 419,
+      "normalized_power_w": 180,
+      "avg_cadence": 79,
+      "max_cadence": 99,
+      "power_zones": [
+        {
+          "zone": 1,
+          "minutes": 54.4,
+          "low": 0
+        },
+        {
+          "zone": 2,
+          "minutes": 25.4,
+          "low": 138
+        },
+        {
+          "zone": 3,
+          "minutes": 24.0,
+          "low": 190
+        },
+        {
+          "zone": 4,
+          "minutes": 16.5,
+          "low": 224
+        },
+        {
+          "zone": 5,
+          "minutes": 3.3,
+          "low": 265
+        },
+        {
+          "zone": 6,
+          "minutes": 2.0,
+          "low": 298
+        },
+        {
+          "zone": 7,
+          "minutes": 0.3,
+          "low": 377
+        }
+      ],
+      "hr_zones": [
+        {
+          "zone": 1,
+          "minutes": 22.5,
+          "low": 98
+        },
+        {
+          "zone": 2,
+          "minutes": 23.5,
+          "low": 117
+        },
+        {
+          "zone": 3,
+          "minutes": 33.3,
+          "low": 137
+        },
+        {
+          "zone": 4,
+          "minutes": 44.5,
+          "low": 156
+        },
+        {
+          "zone": 5,
+          "minutes": 1.4,
+          "low": 176
+        }
+      ],
+      "power_curve": {
+        "5min": 239,
+        "10min": 226,
+        "20min": 199,
+        "30min": 193,
+        "45min": 178,
+        "60min": 167
+      },
+      "tss": 128.5,
+      "tss_source": "power"
+    }
+  },
+  "current": {
+    "as_of": "2026-09-08",
+    "ftp_watts": 230,
+    "weight_kg": 71.4,
+    "weight_date": "2026-07-15",
+    "max_hr_observed": 182.0
+  }
+}
