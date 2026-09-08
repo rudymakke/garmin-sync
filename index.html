@@ -1,54 +1,890 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>garmin-sync</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#171B14">
+<title>Verso Corvara — Cruscotto allenamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    max-width: 42rem;
-    margin: 0 auto;
-    padding: 3rem 1.25rem;
-    line-height: 1.65;
-    color: #1c1c1e;
-    background: #fff;
+  :root{
+    --paper:#EFF1EA; --paper-raised:#FFFFFF;
+    --ink:#171B14; --ink-soft:#4B5147;
+    --line:#C9CEBD; --line-strong:#9CA38C;
+    --yellow:#F2B705; --orange:#E8720C; --red:#C62E24;
+    --teal:#16806A; --violet:#6B3FA0; --blue:#1F6FA8;
+    --band:#DCE4CE;
+    --shadow:0 1px 2px rgba(23,27,20,0.06), 0 4px 14px rgba(23,27,20,0.06);
   }
-  h1 { font-size: 1.7rem; margin-bottom: 0.25rem; }
-  .sub { color: #6b6b70; margin-top: 0; }
-  ul { padding-left: 1.2rem; }
-  a { color: #0a58ca; }
-  footer { margin-top: 2.5rem; font-size: 0.85rem; color: #6b6b70; border-top: 1px solid #e5e5e7; padding-top: 1rem; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.45;
+  }
+  h1,h2,h3,.osw{font-family:'Oswald','Arial Narrow',sans-serif;}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace;}
+
+  .app-header{background:var(--ink);color:var(--paper);padding:16px 18px;}
+  .app-header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+  .app-header p{margin:3px 0 0;font-size:12px;color:rgba(239,241,234,.7);}
+  .countdown{margin-top:10px;display:flex;gap:18px;align-items:baseline;}
+  .countdown .big{font-family:'Oswald',sans-serif;font-size:30px;font-weight:700;line-height:1;}
+  .countdown .lbl{font-size:11.5px;color:rgba(239,241,234,.7);text-transform:uppercase;letter-spacing:.08em;}
+
+  nav.tabs{
+    background:var(--ink);display:flex;overflow-x:auto;
+    border-top:1px solid rgba(239,241,234,.14);
+    position:sticky;top:0;z-index:20;-webkit-overflow-scrolling:touch;
+  }
+  nav.tabs button{
+    flex:1 0 auto;background:none;border:none;color:rgba(239,241,234,.6);
+    font-family:'Oswald',sans-serif;font-size:12.5px;letter-spacing:.09em;
+    text-transform:uppercase;padding:12px 16px;cursor:pointer;
+    border-bottom:2.5px solid transparent;white-space:nowrap;
+  }
+  nav.tabs button.on{color:var(--paper);border-bottom-color:var(--yellow);}
+
+  main{max-width:940px;margin:0 auto;padding:18px 14px 80px;}
+  section.pane{display:none;}
+  section.pane.on{display:block;}
+
+  .card{
+    background:var(--paper-raised);border:1px solid var(--line);
+    border-radius:3px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px;
+  }
+  .card h2{
+    font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;
+    color:var(--ink-soft);margin:0 0 14px;display:flex;justify-content:space-between;
+    align-items:baseline;gap:10px;
+  }
+  .card h2 .side{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0;text-transform:none;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;}
+  .metric{border:1px solid var(--line);border-radius:3px;padding:12px 13px;background:var(--paper);}
+  .metric .k{font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-soft);}
+  .metric .v{font-family:'Oswald',sans-serif;font-size:27px;font-weight:600;line-height:1.15;margin-top:2px;}
+  .metric .v small{font-size:14px;font-weight:500;color:var(--ink-soft);}
+  .metric .d{font-size:11.5px;margin-top:3px;color:var(--ink-soft);}
+  .metric.good{border-left:3px solid var(--teal);}
+  .metric.warn{border-left:3px solid var(--orange);}
+  .metric.bad{border-left:3px solid var(--red);}
+  .metric.neutral{border-left:3px solid var(--line-strong);}
+
+  .verdict{border-radius:3px;padding:14px 15px;margin-bottom:16px;border:1px solid;}
+  .verdict .t{font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+  .verdict p{margin:6px 0 0;font-size:13.5px;}
+  .v-go{background:rgba(22,128,106,.08);border-color:var(--teal);color:#0d5a4a;}
+  .v-care{background:rgba(232,114,12,.09);border-color:var(--orange);color:#8a4207;}
+  .v-stop{background:rgba(198,46,36,.08);border-color:var(--red);color:#8d1f19;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);}
+  th{font-family:'Oswald',sans-serif;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:500;}
+  td.num,th.num{text-align:right;font-family:'IBM Plex Mono',monospace;}
+  tr:last-child td{border-bottom:none;}
+
+  .chart{width:100%;height:auto;display:block;}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-soft);margin-top:8px;}
+  .legend i{display:inline-block;width:11px;height:3px;vertical-align:middle;margin-right:5px;}
+
+  .day{border:1px solid var(--line);border-radius:3px;padding:11px 12px;margin-bottom:8px;background:var(--paper);}
+  .day.today{border-color:var(--ink);border-left:3px solid var(--yellow);background:#fff;}
+  .day .dn{font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-soft);}
+  .day .ds{font-weight:600;font-size:14px;margin-top:1px;}
+  .day .dd{font-size:12.5px;color:var(--ink-soft);margin-top:4px;}
+  .day .dm{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);}
+
+  .pill{display:inline-block;font-family:'Oswald',sans-serif;font-size:10.5px;text-transform:uppercase;
+    letter-spacing:.07em;padding:2px 7px;border-radius:2px;border:1px solid var(--line-strong);color:var(--ink-soft);}
+  .pill.carico{background:rgba(31,111,168,.1);border-color:var(--blue);color:var(--blue);}
+  .pill.scarico{background:rgba(22,128,106,.1);border-color:var(--teal);color:var(--teal);}
+  .pill.test{background:rgba(242,183,5,.16);border-color:#b58a04;color:#7d5f02;}
+  .pill.gara{background:rgba(198,46,36,.1);border-color:var(--red);color:var(--red);}
+  .pill.taper{background:rgba(107,63,160,.1);border-color:var(--violet);color:var(--violet);}
+
+  .bar{height:7px;background:var(--band);border-radius:4px;overflow:hidden;margin-top:6px;}
+  .bar i{display:block;height:100%;background:var(--teal);}
+
+  .note{font-size:12.5px;color:var(--ink-soft);margin:10px 0 0;}
+  .muted{color:var(--ink-soft);}
+  .src{
+    display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+    font-size:12px;color:var(--ink-soft);
+  }
+  button.act{
+    font-family:'Oswald',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+    padding:8px 13px;border:1px solid var(--line-strong);background:var(--paper);
+    border-radius:2px;cursor:pointer;color:var(--ink);
+  }
+  button.act:hover{border-color:var(--teal);color:var(--teal);}
+  .dropzone{
+    border:2px dashed var(--line-strong);border-radius:3px;padding:26px 18px;
+    text-align:center;cursor:pointer;
+  }
+  .dropzone:hover,.dropzone.drag{border-color:var(--teal);background:rgba(22,128,106,.05);}
+  .hidden{display:none !important;}
+  .err{color:var(--red);font-size:13px;font-weight:600;margin-top:10px;}
+  .ok{color:var(--teal);font-size:13px;font-weight:600;margin-top:10px;}
+
+  details{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;}
+  details summary{cursor:pointer;font-family:'Oswald',sans-serif;font-size:12px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--ink-soft);}
+  details .body{font-size:13px;margin-top:9px;}
+
+  ol.prio{margin:8px 0 0;padding-left:20px;font-size:13.5px;}
+  ol.prio li{margin-bottom:3px;}
+
+  @media(max-width:520px){
+    .metric .v{font-size:23px;}
+    .card{padding:15px;}
+  }
 </style>
 </head>
 <body>
 
-<h1>garmin-sync</h1>
-<p class="sub">Strumento personale di archiviazione dei dati di allenamento</p>
+<header class="app-header">
+  <h1>Verso Corvara</h1>
+  <p>Maratona dles Dolomites · Percorso Medio · 4 luglio 2027</p>
+  <div class="countdown">
+    <div><div class="big mono" id="cdDays">—</div><div class="lbl">giorni alla gara</div></div>
+    <div><div class="big mono" id="cdWeek">—</div><div class="lbl">settimana di piano</div></div>
+  </div>
+</header>
 
-<p>
-  Questo progetto copia ogni mattina i dati del mio account Garmin Connect in
-  una cartella privata del mio Google Drive, cos&igrave; da poterli consultare e
-  analizzare nel tempo senza dipendere da un computer acceso.
-</p>
+<nav class="tabs">
+  <button class="on" data-p="oggi">Oggi</button>
+  <button data-p="forma">Forma</button>
+  <button data-p="piano">Piano</button>
+  <button data-p="uscite">Uscite</button>
+  <button data-p="dati">Dati</button>
+</nav>
 
-<p>Cosa viene archiviato:</p>
-<ul>
-  <li>attivit&agrave; ciclistiche con potenza, frequenza cardiaca e tempo per zona</li>
-  <li>metriche giornaliere di recupero (HRV, frequenza a riposo, sonno)</li>
-  <li>indici di carico di allenamento calcolati (CTL, ATL, TSB)</li>
-</ul>
+<main>
 
-<p>
-  &Egrave; un'applicazione a uso strettamente personale: non ha altri utenti,
-  non offre servizi a terzi e non raccoglie dati di nessun altro.
-</p>
+<!-- ============ OGGI ============ -->
+<section class="pane on" id="p-oggi">
+  <div id="verdict"></div>
 
-<p><a href="privacy.html">Note sulla privacy</a></p>
+  <div class="card">
+    <h2>Recupero <span class="side" id="oggiData">—</span></h2>
+    <div class="grid" id="oggiGrid"></div>
+    <p class="note" id="oggiNota"></p>
+  </div>
 
-<footer>
-  Progetto personale &middot; rudy.maccherozzi@gmail.com
-</footer>
+  <div class="card">
+    <h2>HRV · ultimi 21 giorni</h2>
+    <div id="hrvChart"></div>
+    <div class="legend">
+      <span><i style="background:var(--violet)"></i>HRV notturno</span>
+      <span><i style="background:var(--line-strong)"></i>media personale</span>
+    </div>
+    <p class="note">La linea grigia è la tua media sul periodo. Quello che conta non è il valore assoluto, ma lo scostamento dalla tua abitudine.</p>
+  </div>
 
+  <div class="card">
+    <h2>Sonno e frequenza a riposo</h2>
+    <div id="sleepChart"></div>
+    <div class="legend">
+      <span><i style="background:var(--blue)"></i>ore di sonno</span>
+      <span><i style="background:var(--red)"></i>FC riposo</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FORMA ============ -->
+<section class="pane" id="p-forma">
+  <div class="card">
+    <h2>Carico di allenamento <span class="side" id="formaFtp">—</span></h2>
+    <div class="grid" id="formaGrid"></div>
+    <p class="note" id="formaNota"></p>
+  </div>
+
+  <div class="card">
+    <h2>Fitness, fatica e forma</h2>
+    <div id="ctlChart"></div>
+    <div class="legend">
+      <span><i style="background:var(--teal)"></i>CTL · fitness (42gg)</span>
+      <span><i style="background:var(--orange)"></i>ATL · fatica (7gg)</span>
+      <span><i style="background:var(--violet)"></i>TSB · forma</span>
+    </div>
+    <details>
+      <summary>Come si leggono</summary>
+      <div class="body">
+        <p><strong>CTL</strong> è il carico assorbito nelle ultime sei settimane: sale piano ed è la tua condizione di fondo. Scende solo se ti fermi a lungo.</p>
+        <p><strong>ATL</strong> è la fatica delle ultime settimana: sale e scende in fretta.</p>
+        <p><strong>TSB</strong> è la differenza fra le due. Sotto -20 sei in accumulo pesante, fra -10 e -20 stai costruendo, sopra +5 sei fresco ma rischi di perdere stimolo. In gara si arriva attorno a +5/+15.</p>
+        <p class="muted">Nota onesta: se il TSS di un'uscita è marcato "stima da zone", il numero è indicativo. Diventa attendibile quando Garmin fornisce la potenza media reale.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>Carico settimanale · TSS</h2>
+    <div id="weekChart"></div>
+    <p class="note">Le settimane si contano da lunedì. Un salto oltre il 30% rispetto alla settimana precedente è il modo più rapido per arrivare stanchi alla domenica.</p>
+  </div>
+
+  <div class="card">
+    <h2>Obiettivo W/kg</h2>
+    <div id="wkgBox"></div>
+  </div>
+</section>
+
+<!-- ============ PIANO ============ -->
+<section class="pane" id="p-piano">
+  <div class="card" id="settimanaCard">
+    <h2>Settimana in corso <span class="side" id="wkRange">—</span></h2>
+    <div id="wkHead"></div>
+    <div id="wkDays"></div>
+  </div>
+
+  <div class="card">
+    <h2>Se la settimana si stringe</h2>
+    <p class="note" style="margin-top:0">Si taglia sempre dal basso, mai dall'alto.</p>
+    <ol class="prio">
+      <li>Uscita lunga del weekend</li>
+      <li>Seduta di soglia</li>
+      <li>VO2max</li>
+      <li>F1 · forza superiori</li>
+      <li>F2 · forza inferiori</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Zone di allenamento <span class="side" id="zoneFtp">—</span></h2>
+    <table id="zonePow"></table>
+    <details>
+      <summary>Zone di frequenza cardiaca</summary>
+      <div class="body"><table id="zoneHr"></table>
+      <p class="note">Sono le fasce misurate su Strava, non una percentuale della FC max: la percentuale sottostimava la Z2 di circa 10 bpm.</p></div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>Prossime settimane</h2>
+    <div id="nextWeeks"></div>
+  </div>
+
+  <div class="card">
+    <h2>Test FTP programmati</h2>
+    <table id="testTable"></table>
+  </div>
+</section>
+
+<!-- ============ USCITE ============ -->
+<section class="pane" id="p-uscite">
+  <div class="card">
+    <h2>Ultime uscite</h2>
+    <div id="actList"></div>
+  </div>
+  <div class="card">
+    <h2>Migliori potenze <span class="side">dalle uscite in archivio</span></h2>
+    <table id="pcTable"></table>
+    <p class="note">Valori ricavati dalla telemetria campionata: sugli sforzi brevi dentro uscite lunghe possono risultare leggermente smussati.</p>
+  </div>
+</section>
+
+<!-- ============ DATI ============ -->
+<section class="pane" id="p-dati">
+  <div class="card">
+    <h2>Sorgente dei dati</h2>
+    <div class="src" id="srcInfo"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="act" id="btnReload">Ricarica automatico</button>
+      <button class="act" id="btnPick">Carica file</button>
+      <button class="act" id="btnClear">Svuota cache</button>
+    </div>
+    <input type="file" id="filePick" accept=".json,application/json" multiple class="hidden">
+    <div id="loadMsg"></div>
+  </div>
+
+  <div class="card">
+    <h2>Come funziona</h2>
+    <p class="note" style="margin-top:0">
+      Il cruscotto cerca <span class="mono">data.json</span> e <span class="mono">training_load.json</span> nella
+      stessa cartella in cui è pubblicato. Se non li trova, puoi caricarli a mano da Google Drive con il
+      pulsante qui sopra: restano poi salvati nel browser e alla riapertura si vedono subito, anche senza rete.
+    </p>
+    <p class="note">
+      Nessun dato lascia il tuo dispositivo: non c'è alcun server dietro questa pagina, tutto avviene nel browser.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Impostazioni</h2>
+    <div class="grid">
+      <div>
+        <div class="metric">
+          <div class="k">FTP usata nei calcoli</div>
+          <div class="v"><input id="ftpInput" type="number" class="mono"
+            style="width:100%;border:none;background:none;font-size:26px;font-family:'Oswald',sans-serif;font-weight:600;color:var(--ink);padding:0"></div>
+          <div class="d">watt · modifica dopo ogni retest</div>
+        </div>
+      </div>
+      <div>
+        <div class="metric">
+          <div class="k">Peso</div>
+          <div class="v"><input id="pesoInput" type="number" step="0.1" class="mono"
+            style="width:100%;border:none;background:none;font-size:26px;font-family:'Oswald',sans-serif;font-weight:600;color:var(--ink);padding:0"></div>
+          <div class="d">kg</div>
+        </div>
+      </div>
+    </div>
+    <p class="note">Cambiano solo la visualizzazione qui, non il piano su Drive né la sync.</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+"use strict";
+
+/* ===================== PIANO (statico) ===================== */
+const GARA = "2027-07-04";
+const PIANO = [
+["1 - Base aerobica",1,"2026-10-05","2026-10-11","Carico","Ripresa della struttura dopo lo scarico di settembre","R1 - Endurance + cadenza",60,"R2 - SFR 4x6'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 1h30 Z2, ~400 m D+",90,4.4,"Se salta un rullo: non recuperarlo. Se salta il weekend: R9 in casa da 60'."],
+["1 - Base aerobica",2,"2026-10-12","2026-10-18","Carico","Costruzione del volume aerobico","R1 - Endurance + cadenza",60,"R2 - SFR 4x6'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 1h45 Z2, ~500 m D+",105,4.7,"Weekend piovoso: R9 rullo 75' in Z2."],
+["1 - Base aerobica",3,"2026-10-19","2026-10-25","Carico","Introduzione dell'intensità (sweet spot)","R3 - Sweet Spot 3x8'",60,"R2 - SFR 5x6'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2, ~600 m D+",120,4.9,"Poco tempo: taglia F2, non R3."],
+["1 - Base aerobica",4,"2026-10-26","2026-11-01","Scarico","SCARICO — assorbi il carico delle 3 settimane precedenti","R1 - Endurance ridotto",45,"R8 - Recupero attivo",40,"F1 - Forza superiori (leggera, 2 giri)",20,"—",0,"S1 - Uscita 1h15 facile",75,3.0,"Settimana già leggera: se sei stanco saltala del tutto, senza rimorsi."],
+["1 - Base aerobica",5,"2026-11-02","2026-11-08","Carico","Sweet spot + forza resistente","R3 - Sweet Spot 3x10'",60,"R2 - SFR 5x6'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2, ~700 m D+",120,4.9,"Bimba malata: salta la forza e tieni le due sedute al rullo, che si fanno in casa."],
+["1 - Base aerobica",6,"2026-11-09","2026-11-15","Carico","Consolidamento","R3 - Sweet Spot 3x10'",60,"R2 - SFR 4x8'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2, ~800 m D+",120,4.9,"Buio e freddo la sera: tieni il rullo la mattina presto, come già fai."],
+["1 - Base aerobica",7,"2026-11-16","2026-11-22","Carico","Primo affaccio sulla soglia","R4 - Soglia 2x15'",60,"R2 - SFR 4x8'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h con 3x5' in salita, ~800 m D+",120,4.9,"Se il weekend salta, recupera il lungo il sabato successivo: mai due lunghi ravvicinati."],
+["1 - Base aerobica",8,"2026-11-23","2026-11-29","Test","SCARICO + TEST FTP #1 — poi aggiorna le zone","R10 - Test FTP",55,"R8 - Recupero attivo",40,"F1 - Forza superiori (leggera)",20,"—",0,"S1 - Uscita 1h30 facile",90,3.4,"Se arrivi stanco al test, rimandalo di 3-4 giorni: un test su gambe cotte falsa tutto il piano."],
+["1 - Base aerobica",9,"2026-11-30","2026-12-06","Carico","Ripartenza con le zone aggiornate","R4 - Soglia 2x20'",60,"R1 - Endurance + cadenza",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2, ~800 m D+",120,4.9,"Verifica di aver aggiornato la FTP nel foglio Zone."],
+["2 - Costruzione indoor",10,"2026-12-07","2026-12-13","Carico","Apertura del blocco invernale: soglia + VO2max","R4 - Soglia 2x20'",60,"R6 - VO2max 5x4'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2",120,4.9,"Il VO2max è la seduta più sensibile al sonno: sotto le 5h di sonno convertila in R1."],
+["2 - Costruzione indoor",11,"2026-12-14","2026-12-20","Carico","Primo blocco continuo (simulazione passo)","R5 - Blocco continuo 30'",60,"R6 - VO2max 5x4'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2",120,4.9,"Weekend piovoso: R9 rullo 90'."],
+["2 - Costruzione indoor",12,"2026-12-21","2026-12-27","Scarico","SCARICO + Natale: priorità alla famiglia","R1 - Endurance ridotto",45,"F1 - Forza superiori (leggera)",20,"—",0,"—",0,"S1 - Uscita 1h30 facile se possibile",90,2.6,"Settimana volutamente scarica: qualsiasi cosa tu riesca a fare è guadagnata."],
+["2 - Costruzione indoor",13,"2026-12-28","2027-01-03","Scarico","Feste — mantenimento leggero","R8 - Recupero attivo",45,"F3 - Full body express",30,"—",0,"—",0,"S1 - Uscita 2h Z2 se il tempo lo consente",120,3.3,"Zero sensi di colpa: due uscite in due settimane bastano a non perdere nulla."],
+["2 - Costruzione indoor",14,"2027-01-04","2027-01-10","Carico","Ripresa del carico: soglia + over-under","R4 - Soglia 2x20'",60,"R7 - Over-Under",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2",120,4.9,"Post-feste: se le gambe sono spente, prima settimana al 70% dei watt previsti."],
+["2 - Costruzione indoor",15,"2027-01-11","2027-01-17","Carico","Allungamento del blocco continuo","R5 - Blocco continuo 35'",65,"R6 - VO2max 5x4'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2",120,5.0,"Freddo intenso: F1 e F2 si fanno in casa, nessuna scusa meteo."],
+["2 - Costruzione indoor",16,"2027-01-18","2027-01-24","Carico","Volume di soglia in crescita","R4 - Soglia 2x25'",65,"R7 - Over-Under",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2 oppure R9 rullo 90'",120,5.0,"Weekend impegnato: R9 da 75' vale l'uscita."],
+["2 - Costruzione indoor",17,"2027-01-25","2027-01-31","Test","SCARICO + TEST FTP #2 — poi aggiorna le zone","R10 - Test FTP",55,"R8 - Recupero attivo",40,"F1 - Forza superiori (leggera)",20,"—",0,"S1 - Uscita 1h30 facile",90,3.4,"Aspettati +10/20 W rispetto a ottobre. Se sei fermo, il problema è recupero o alimentazione, non allenamento."],
+["2 - Costruzione indoor",18,"2027-02-01","2027-02-07","Carico","Blocco continuo 40' — il cuore dell'inverno","R5 - Blocco continuo 40'",70,"R6 - VO2max 5x4'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h Z2",120,5.1,"Se non reggi i 40' continui, spezzali in 2x20' con 3' di recupero e riprova la settimana dopo."],
+["2 - Costruzione indoor",19,"2027-02-08","2027-02-14","Carico","Soglia lunga + tolleranza ai cambi di ritmo","R4 - Soglia 2x25'",65,"R7 - Over-Under",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h15 Z2",135,5.3,"Priorità in caso di tempo ridotto: weekend > R4 > R7 > F1 > F2."],
+["2 - Costruzione indoor",20,"2027-02-15","2027-02-21","Carico","Simulazione Pordoi: 45' continui","R5 - Blocco continuo 45'",70,"R6 - VO2max 5x4'",60,"F1 - Forza superiori",30,"F2 - Forza inferiori (ven)",25,"S1 - Uscita 2h15 Z2",135,5.3,"45' continui è la durata reale del Pordoi al tuo ritmo: è un test mentale oltre che fisico."],
+["2 - Costruzione indoor",21,"2027-02-22","2027-02-28","Scarico","SCARICO","R1 - Endurance ridotto",45,"R8 - Recupero attivo",40,"F1 - Forza superiori (leggera)",20,"—",0,"S1 - Uscita 1h30 facile",90,3.3,"Se hai saltato settimane a febbraio, usa questa per recuperarne una di carico invece che scaricare."],
+["2 - Costruzione indoor",22,"2027-03-01","2027-03-07","Carico","Marzo: ultimo blocco al rullo, sale il volume","R5 - Blocco continuo 45'",70,"R6 - VO2max 5x4'",60,"R1 - Endurance + cadenza",60,"F1 - Forza superiori (lun)",30,"S1 - Uscita 2h30, ~700 m D+",150,6.2,"Da qui il terzo giorno torna in bici e la forza resta solo F1, al lunedì. F2 esce dal piano."],
+["2 - Costruzione indoor",23,"2027-03-08","2027-03-14","Carico","Densità di soglia","R5 - Blocco continuo 45'",70,"R7 - Over-Under",60,"R1 - Endurance + cadenza",60,"F1 - Forza superiori (lun)",30,"S1 - Uscita 2h30, ~800 m D+",150,6.2,"Prima giornata di sole: puoi convertire una seduta al rullo in S3 su strada."],
+["2 - Costruzione indoor",24,"2027-03-15","2027-03-21","Carico","Prima uscita lunga da 3 ore","R5 - Blocco 2x30'",75,"R6 - VO2max 5x4'",60,"R1 - Endurance + cadenza",60,"F1 - Forza superiori (lun)",30,"S5 - Uscita 3h, ~900 m D+",180,6.8,"Qui inizia il lavoro sull'alimentazione in gara: prova 60-70 g di carboidrati/ora."],
+["2 - Costruzione indoor",25,"2027-03-22","2027-03-28","Test","SCARICO + TEST FTP #3 — poi aggiorna le zone","R10 - Test FTP",55,"R8 - Recupero attivo",40,"—",0,"F1 - Forza superiori (leggera, lun)",20,"S1 - Uscita 1h30 facile",90,3.4,"Ultimo test al rullo: da aprile i riferimenti diventano quelli su strada."],
+["2 - Costruzione indoor",26,"2027-03-29","2027-04-04","Carico","Chiusura del blocco indoor","R5 - Blocco continuo 50'",75,"R7 - Over-Under",60,"R1 - Endurance + cadenza",60,"F1 - Forza superiori (lun)",30,"S5 - Uscita 3h, ~1.000 m D+",180,6.8,"Ultima settimana di rullo del piano: da lunedì prossimo si esce sempre."],
+["3 - Specificità su strada",27,"2027-04-05","2027-04-11","Carico","Transizione alla strada: si porta fuori il lavoro invernale","S2 - Ripetute 5x5' in salita",60,"S3 - Salita lunga continua",60,"S4 - Recupero attivo",45,"F1 - Forza superiori (lun)",25,"S5 - Uscita 2h30, ~800 m D+",150,5.7,"Le prime uscite fuori sembreranno dure: è normale, il rullo non ha vento né discese."],
+["3 - Specificità su strada",28,"2027-04-12","2027-04-18","Carico","Volume di dislivello in crescita","S2 - Ripetute 6x5' in salita",60,"S3 - Salita lunga continua",65,"S4 - Recupero attivo",45,"F1 - Forza superiori (lun)",25,"S5 - Uscita 3h, ~1.100 m D+",180,6.3,"Se piove infrasettimana e non hai più il rullo: F3 full body in casa."],
+["3 - Specificità su strada",29,"2027-04-19","2027-04-25","Scarico","SCARICO","S4 - Recupero attivo",45,"S1 - Uscita collinare facile",60,"—",0,"F1 - Forza superiori (leggera, lun)",20,"S1 - Uscita 2h facile",120,4.1,"Momento giusto per tagliando e cambio catena: controlla la bici adesso, non a giugno."],
+["3 - Specificità su strada",30,"2027-04-26","2027-05-02","Carico","Salite lunghe: costanza di potenza","S2 - Ripetute 5x6' in salita",60,"S3 - Salita lunga continua",70,"S4 - Recupero attivo",45,"F1 - Forza superiori (lun)",25,"S5 - Uscita 3h, ~1.300 m D+",180,6.3,"Se il weekend salta, l'uscita lunga si recupera anche il sabato mattina presto."],
+["3 - Specificità su strada",31,"2027-05-03","2027-05-09","Carico","Costruzione della resistenza specifica","S2 - Ripetute 4x8' in salita",60,"S3 - Salita lunga continua",70,"S4 - Recupero attivo",45,"F1 - Forza superiori (lun)",25,"S5 - Uscita 3h30, ~1.500 m D+",210,6.8,"Prova qui i rapporti che userai in Dolomiti: compact davanti e pacco pignoni ampio dietro."],
+["3 - Specificità su strada",32,"2027-05-10","2027-05-16","Carico","Avvicinamento al dislivello di gara","S2 - Ripetute 4x8' in salita",60,"S3 - Salita lunga continua",70,"S4 - Recupero attivo",45,"F1 - Forza superiori (lun)",25,"S5 - Uscita 3h30, ~1.700 m D+",210,6.8,"Da qui ogni lunga è una prova generale: stessa colazione, stessi integratori, stesso abbigliamento."],
+["3 - Specificità su strada",33,"2027-05-17","2027-05-23","Test","SCARICO + TEST FTP #4 su strada","S4 - Recupero attivo",45,"Test 20' su salita lunga",60,"—",0,"F1 - Forza superiori (leggera, lun)",20,"S1 - Uscita 2h facile",120,4.1,"Test su salita reale: FTP = 95% della media dei 20'. È il test che dice se il sub-5h è realistico."],
+["3 - Specificità su strada",34,"2027-05-24","2027-05-30","Carico","Prova generale: granfondo o lunga di verifica","S2 - Ripetute 3x12' in salita",60,"S3 - Salita lunga continua",70,"S4 - Recupero attivo",45,"F1 - Forza superiori (lun)",25,"S5 - Uscita 4h, ~1.800 m D+ (meglio una granfondo)",240,7.3,"Una granfondo qui vale più di tre allenamenti: testi partenza, ristori e gestione del gruppo."],
+["3 - Specificità su strada",35,"2027-05-31","2027-06-06","Carico","WEEKEND DOPPIO — simulazione della fatica accumulata","S2 - Ripetute 4x8' in salita",60,"S3 - Salita lunga continua",65,"S4 - Recupero attivo",45,"F1 - Forza superiori (leggera, lun)",20,"S6 - Sab 2h + Dom 3h30 (~2.000 m D+)",330,8.7,"Se il doppio non è compatibile con la famiglia, fai una sola uscita da 4h: perdi poco."],
+["3 - Specificità su strada",36,"2027-06-07","2027-06-13","Carico","PICCO — la settimana più impegnativa del piano","S2 - Ripetute 3x12' in salita",60,"S3 - Salita lunga continua",70,"S4 - Recupero attivo",45,"F1 - Forza superiori (leggera, lun)",20,"S5 - Uscita 4h30, ~2.200-2.500 m D+",270,7.8,"Se arrivi in fondo a questa uscita senza crollare, la gara è alla tua portata."],
+["3 - Specificità su strada",37,"2027-06-14","2027-06-20","Carico","Si tiene l'intensità, cala il volume","S2 - Ripetute 3x8' in salita",55,"S3 - Salita media",60,"—",0,"F1 - Forza superiori (leggera, lun)",20,"S5 - Uscita 3h, ~1.500 m D+",180,5.3,"Da qui in avanti nessun allenamento può più migliorarti: può solo stancarti."],
+["4 - Taper e gara",38,"2027-06-21","2027-06-27","Taper","TAPER — volume -35%, gambe reattive","S2 - 3x5' in salita a ritmo gara",50,"S4 - Recupero attivo",45,"—",0,"F1 - solo blocco A + chin tuck (lun)",15,"S1 - Uscita 2h, ~700 m D+",120,3.8,"Cura sonno e idratazione più dell'allenamento. Prepara con calma borsa, bici e viaggio."],
+["4 - Taper e gara",39,"2027-06-28","2027-07-04","Gara","SETTIMANA DI GARA — domenica 4 luglio","Mar: 1h con 3x3' a ritmo gara",60,"Gio: 45' facile con 3 allunghi",45,"Sab: 30-40' sciolti + ritiro pettorale",40,"—",0,"DOMENICA 4/7 · GARA — 106 km / 3.130 m D+",300,7.4,"Colazione 3h prima, 60-90 g di carboidrati/ora dal primo passo, partenza controllata sul Campolongo."]
+];
+const COL = {fase:0,n:1,dal:2,al:3,tipo:4,focus:5,g1:6,m1:7,g2:8,m2:9,g3:10,m3:11,gf:12,mf:13,gw:14,mw:15,ore:16,pianoB:17};
+
+const TEST_FTP = [
+  ["06/09/2026","Baseline","Rilievo Garmin",230,72.2],
+  ["","S8 · nov 2026","Ramp test / 20' al rullo",null,null],
+  ["","S17 · gen 2027","Ramp test / 20' al rullo",null,null],
+  ["","S25 · mar 2027","Ramp test / 20' al rullo",null,null],
+  ["","S33 · mag 2027","Test 20' su salita reale",null,null]
+];
+
+const ZONE_POT = [
+  ["Z1","Recupero attivo",0,.55],["Z2","Endurance / fondo",.55,.75],
+  ["Z3","Tempo / medio",.75,.90],["Z4","Soglia",.90,1.05],
+  ["Z5","VO2max",1.05,1.20],["Z6","Capacità anaerobica",1.20,1.50],
+  ["Z7","Neuromuscolare",1.50,null]
+];
+const ZONE_FC = [["Z1","Recupero",0,126],["Z2","Fondo lento",127,157],
+  ["Z3","Fondo medio",158,173],["Z4","Soglia",174,188],["Z5","Massimale",189,null]];
+
+/* ===================== STATO ===================== */
+const LS = "versocorvara.v1";
+let DATA = null, LOAD = null;
+let cfg = {ftp:230, peso:72.2};
+
+/* ===================== UTILI ===================== */
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => {const e=document.createElement(t); if(c)e.className=c; if(h!==undefined)e.innerHTML=h; return e;};
+const iso = d => d.toISOString().slice(0,10);
+const oggi = () => iso(new Date());
+const nDays = (a,b) => Math.round((new Date(b)-new Date(a))/86400000);
+const fmtD = s => {const [y,m,d]=s.split("-"); return `${d}/${m}`;};
+const num = (v,dec=0) => v===null||v===undefined||isNaN(v) ? "—" : Number(v).toFixed(dec);
+const mean = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+
+function saveLS(){
+  try{ localStorage.setItem(LS, JSON.stringify({data:DATA,load:LOAD,cfg,ts:Date.now()})); }catch(e){}
+}
+function loadLS(){
+  try{
+    const r = JSON.parse(localStorage.getItem(LS)||"null");
+    if(!r) return false;
+    DATA=r.data; LOAD=r.load; if(r.cfg) cfg={...cfg,...r.cfg};
+    return !!DATA;
+  }catch(e){ return false; }
+}
+
+/* ===================== GRAFICI (SVG puro) ===================== */
+function lineChart(host, series, opts={}){
+  const W=700, H=opts.h||190, P={t:12,r:14,b:24,l:34};
+  const all = series.flatMap(s=>s.vals.filter(v=>v!==null&&v!==undefined));
+  if(!all.length){ host.innerHTML='<p class="note">Dati non disponibili.</p>'; return; }
+  let min = opts.min!==undefined?opts.min:Math.min(...all);
+  let max = opts.max!==undefined?opts.max:Math.max(...all);
+  if(min===max){min-=1;max+=1;}
+  const pad=(max-min)*0.12; min-=pad; max+=pad;
+  const n = Math.max(...series.map(s=>s.vals.length));
+  const X = i => P.l + (n<2?0:i*(W-P.l-P.r)/(n-1));
+  const Y = v => P.t + (H-P.t-P.b)*(1-(v-min)/(max-min));
+
+  let g = `<svg viewBox="0 0 ${W} ${H}" class="chart" preserveAspectRatio="none" style="height:${H}px">`;
+  for(let k=0;k<=3;k++){
+    const v = min+(max-min)*k/3, y=Y(v);
+    g += `<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#C9CEBD" stroke-width="1"/>`;
+    g += `<text x="4" y="${y+3.5}" font-size="10" fill="#4B5147" font-family="IBM Plex Mono,monospace">${v.toFixed(opts.dec||0)}</text>`;
+  }
+  if(opts.zero && min<0 && max>0){
+    g += `<line x1="${P.l}" y1="${Y(0)}" x2="${W-P.r}" y2="${Y(0)}" stroke="#9CA38C" stroke-width="1.4" stroke-dasharray="3 3"/>`;
+  }
+  series.forEach(s=>{
+    if(s.dash===undefined && s.area){
+      let d=`M ${X(0)} ${Y(s.vals[0])}`;
+      s.vals.forEach((v,i)=>{ if(v!==null) d+=` L ${X(i)} ${Y(v)}`; });
+      d += ` L ${X(s.vals.length-1)} ${Y(min)} L ${X(0)} ${Y(min)} Z`;
+      g += `<path d="${d}" fill="${s.color}" opacity="0.10"/>`;
+    }
+    let d="", started=false;
+    s.vals.forEach((v,i)=>{
+      if(v===null||v===undefined) return;
+      d += (started?" L ":"M ")+X(i)+" "+Y(v); started=true;
+    });
+    g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.2}"
+           stroke-linejoin="round" stroke-linecap="round" ${s.dash?`stroke-dasharray="${s.dash}"`:""}/>`;
+    if(s.dots){
+      s.vals.forEach((v,i)=>{ if(v!==null&&v!==undefined)
+        g+=`<circle cx="${X(i)}" cy="${Y(v)}" r="2.6" fill="${s.color}"/>`; });
+    }
+  });
+  (opts.labels||[]).forEach((lb,i)=>{
+    if(lb) g += `<text x="${X(i)}" y="${H-7}" font-size="9.5" fill="#4B5147"
+                  text-anchor="middle" font-family="IBM Plex Mono,monospace">${lb}</text>`;
+  });
+  g += "</svg>";
+  host.innerHTML = g;
+}
+
+function barChart(host, vals, labels, color, opts={}){
+  const W=700,H=opts.h||160,P={t:12,r:10,b:26,l:34};
+  if(!vals.length){ host.innerHTML='<p class="note">Dati non disponibili.</p>'; return; }
+  const max = Math.max(...vals,1)*1.15;
+  const bw = (W-P.l-P.r)/vals.length;
+  const Y = v => P.t+(H-P.t-P.b)*(1-v/max);
+  let g=`<svg viewBox="0 0 ${W} ${H}" class="chart" preserveAspectRatio="none" style="height:${H}px">`;
+  for(let k=0;k<=2;k++){
+    const v=max*k/2,y=Y(v);
+    g+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#C9CEBD"/>`;
+    g+=`<text x="4" y="${y+3.5}" font-size="10" fill="#4B5147" font-family="IBM Plex Mono,monospace">${Math.round(v)}</text>`;
+  }
+  vals.forEach((v,i)=>{
+    const h=(H-P.t-P.b)*(v/max);
+    g+=`<rect x="${P.l+i*bw+bw*0.18}" y="${Y(v)}" width="${bw*0.64}" height="${Math.max(h,0)}"
+         fill="${color}" rx="1.5"/>`;
+    if(labels[i]) g+=`<text x="${P.l+i*bw+bw/2}" y="${H-8}" font-size="9.5" fill="#4B5147"
+         text-anchor="middle" font-family="IBM Plex Mono,monospace">${labels[i]}</text>`;
+  });
+  g+="</svg>"; host.innerHTML=g;
+}
+
+/* ===================== OGGI ===================== */
+function renderOggi(){
+  const w = DATA?.wellness || {};
+  const days = Object.keys(w).sort();
+  if(!days.length){ $("#oggiGrid").innerHTML='<p class="note">Nessun dato di recupero.</p>'; return; }
+
+  const last = w[days[days.length-1]];
+  $("#oggiData").textContent = "aggiornato al " + fmtD(last.date);
+
+  const hrvAll = days.map(d=>w[d].hrv_overnight_ms).filter(v=>v!=null);
+  const hrvBase = mean(hrvAll.slice(-28));
+  const rhrAll = days.map(d=>w[d].resting_hr).filter(v=>v!=null);
+  const rhrBase = mean(rhrAll.slice(-28));
+
+  const hrv=last.hrv_overnight_ms, rhr=last.resting_hr, slp=last.sleep_hours;
+  const dHrv = (hrv!=null&&hrvBase) ? (hrv-hrvBase)/hrvBase*100 : null;
+
+  const cls = (ok,warn) => ok?"good":(warn?"warn":"bad");
+  const g = $("#oggiGrid"); g.innerHTML="";
+  const add=(k,v,unit,d,c)=>{
+    g.appendChild(el("div","metric "+c,
+      `<div class="k">${k}</div><div class="v">${v}<small>${unit||""}</small></div><div class="d">${d||""}</div>`));
+  };
+
+  add("HRV notturno", num(hrv), " ms",
+    dHrv===null?"":`${dHrv>=0?"+":""}${dHrv.toFixed(0)}% sulla tua media (${num(hrvBase)} ms)`,
+    dHrv===null?"neutral":cls(dHrv>=-3, dHrv>=-10));
+  add("FC a riposo", num(rhr), " bpm",
+    rhrBase?`media ${num(rhrBase,1)} bpm`:"",
+    rhr==null?"neutral":cls(rhr<=45, rhr<=48));
+  add("Sonno", num(slp,1), " h",
+    last.sleep_score?`punteggio ${last.sleep_score}`:"",
+    slp==null?"neutral":cls(slp>=7, slp>=6));
+  add("Body battery", last.body_battery_high!=null?`${last.body_battery_low}→${last.body_battery_high}`:"—","",
+    "minimo e massimo", "neutral");
+  add("Stress medio", num(last.stress_avg),"", "", last.stress_avg==null?"neutral":cls(last.stress_avg<=25,last.stress_avg<=35));
+
+  /* regola decisionale concordata */
+  const hrvGiu = (hrv!=null&&hrvBase&&hrv<hrvBase);
+  const rhrAlto = (rhr!=null&&rhr>45);
+  const sonnoCorto = (slp!=null&&slp<5);
+  let v;
+  if(sonnoCorto || (hrvGiu&&rhrAlto)){
+    v = {c:"v-stop", t:"Oggi niente qualità",
+      p:"Sostituisci soglia o VO2max con Z2 leggera o lavoro di cadenza. Il VO2max è la seduta più sensibile al sonno: sotto le cinque ore va convertita, non forzata."};
+  } else if(hrvGiu || rhrAlto){
+    v = {c:"v-care", t:"Procedi con attenzione",
+      p:"Un solo segnale fuori posto. Puoi allenarti, ma valuta di tenere l'intensità nella parte bassa del range e di non allungare la seduta."};
+  } else {
+    v = {c:"v-go", t:"Via libera",
+      p:"HRV e frequenza a riposo sono nei tuoi valori abituali. Seduta come da piano."};
+  }
+  $("#verdict").innerHTML =
+    `<div class="verdict ${v.c}"><div class="t">${v.t}</div><p>${v.p}</p></div>`;
+
+  const parts=[];
+  if(hrvGiu) parts.push("HRV sotto la media personale");
+  if(rhrAlto) parts.push("FC a riposo sopra 45 bpm");
+  if(sonnoCorto) parts.push("meno di 5 ore di sonno");
+  $("#oggiNota").textContent = parts.length
+    ? "Segnali attivi: "+parts.join(", ")+"."
+    : "Nessun segnale di allarme attivo.";
+
+  /* grafici */
+  const last21 = days.slice(-21);
+  const lab = last21.map((d,i)=> i%3===0 ? fmtD(d) : "");
+  lineChart($("#hrvChart"), [
+    {vals:last21.map(d=>w[d].hrv_overnight_ms??null), color:"#6B3FA0", dots:true, area:true},
+    {vals:last21.map(()=>hrvBase), color:"#9CA38C", w:1.4, dash:"4 4"}
+  ], {labels:lab});
+
+  lineChart($("#sleepChart"), [
+    {vals:last21.map(d=>w[d].sleep_hours??null), color:"#1F6FA8", dots:true}
+  ], {labels:lab, dec:1});
+  const h2 = el("div");
+  lineChart(h2, [{vals:last21.map(d=>w[d].resting_hr??null), color:"#C62E24", dots:true}], {labels:lab, h:150});
+  $("#sleepChart").appendChild(h2);
+}
+
+/* ===================== FORMA ===================== */
+function renderForma(){
+  const s = LOAD?.series || [];
+  $("#formaFtp").textContent = "TSS calcolato su FTP " + (LOAD?.ftp_used ?? cfg.ftp) + " W";
+  const g=$("#formaGrid"); g.innerHTML="";
+  if(!s.length){ g.innerHTML='<p class="note">Serve training_load.json per vedere il carico.</p>'; return; }
+
+  const l = s[s.length-1];
+  const add=(k,v,d,c)=>g.appendChild(el("div","metric "+c,
+    `<div class="k">${k}</div><div class="v">${v}</div><div class="d">${d}</div>`));
+
+  let stato, cls;
+  if(l.tsb < -25){stato="accumulo pesante"; cls="bad";}
+  else if(l.tsb < -10){stato="in costruzione"; cls="good";}
+  else if(l.tsb < 5){stato="equilibrio"; cls="good";}
+  else if(l.tsb < 20){stato="fresco"; cls="warn";}
+  else {stato="troppo scarico"; cls="bad";}
+
+  add("CTL · fitness", num(l.ctl,1), "condizione di fondo", "neutral");
+  add("ATL · fatica", num(l.atl,1), "ultime settimana", "neutral");
+  add("TSB · forma", (l.tsb>0?"+":"")+num(l.tsb,1), stato, cls);
+
+  const ultimi7 = s.slice(-7).reduce((a,b)=>a+b.tss,0);
+  add("TSS ultimi 7 giorni", num(ultimi7), "somma di carico", "neutral");
+
+  $("#formaNota").textContent = "Serie dal " + fmtD(s[0].date) + " a oggi. " +
+    (LOAD?.nota || "");
+
+  const view = s.slice(-90);
+  const lab = view.map((p,i)=> i%14===0 ? fmtD(p.date) : "");
+  lineChart($("#ctlChart"), [
+    {vals:view.map(p=>p.ctl), color:"#16806A", area:true},
+    {vals:view.map(p=>p.atl), color:"#E8720C"},
+    {vals:view.map(p=>p.tsb), color:"#6B3FA0", w:1.8, dash:"5 3"}
+  ], {labels:lab, zero:true, h:210});
+
+  /* TSS settimanale */
+  const wk={};
+  s.forEach(p=>{
+    const d=new Date(p.date); const dow=(d.getDay()+6)%7;
+    const mon=new Date(d); mon.setDate(d.getDate()-dow);
+    const k=iso(mon); wk[k]=(wk[k]||0)+p.tss;
+  });
+  const keys=Object.keys(wk).sort().slice(-12);
+  barChart($("#weekChart"), keys.map(k=>wk[k]), keys.map((k,i)=>i%2===0?fmtD(k):""), "#1F6FA8");
+
+  /* W/kg */
+  const wkg = cfg.peso ? cfg.ftp/cfg.peso : null;
+  const target=3.7, pct = wkg? Math.min(100, wkg/target*100):0;
+  $("#wkgBox").innerHTML = `
+    <div class="grid">
+      <div class="metric neutral"><div class="k">Attuale</div>
+        <div class="v">${num(wkg,2)}<small> W/kg</small></div>
+        <div class="d">${cfg.ftp} W a ${num(cfg.peso,1)} kg</div></div>
+      <div class="metric neutral"><div class="k">Obiettivo giugno 2027</div>
+        <div class="v">3,6<small>–3,8 W/kg</small></div>
+        <div class="d">260–275 W al peso attuale</div></div>
+    </div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <p class="note">Con 3,16 W/kg il sub-5h non era alla portata: il piano è costruito per arrivarci.
+    Il test di maggio (S33) è il momento in cui si decide se il traguardo resta le 5 ore o diventa 5h15–5h30.
+    Cambia il numero, non l'obiettivo di arrivare bene.</p>`;
+}
+
+/* ===================== PIANO ===================== */
+function settimanaCorrente(){
+  const t = oggi();
+  for(const r of PIANO){ if(t>=r[COL.dal] && t<=r[COL.al]) return r; }
+  return null;
+}
+function renderPiano(){
+  const t = oggi();
+  const gg = nDays(t, GARA);
+  $("#cdDays").textContent = gg>0? gg : (gg===0?"OGGI":"—");
+
+  const cur = settimanaCorrente();
+  $("#cdWeek").textContent = cur ? "S"+cur[COL.n] : "—";
+
+  const head=$("#wkHead"), dl=$("#wkDays");
+  if(!cur){
+    const inizio = PIANO[0][COL.dal];
+    const mancano = nDays(t, inizio);
+    $("#wkRange").textContent = "";
+    head.innerHTML = mancano>0
+      ? `<p class="note" style="margin:0"><strong>Il piano parte lunedì ${fmtD(inizio)}/2026.</strong>
+         Mancano ${mancano} giorni. Settembre è scarico e transizione: nessuna struttura, si pedala per piacere.</p>`
+      : `<p class="note" style="margin:0">Fuori dal periodo del piano.</p>`;
+    dl.innerHTML="";
+    renderProssime(); renderZone(); renderTest();
+    return;
+  }
+
+  $("#wkRange").textContent = fmtD(cur[COL.dal])+" – "+fmtD(cur[COL.al]);
+  const tipoCls = {Carico:"carico",Scarico:"scarico",Test:"test",Gara:"gara",Taper:"taper"}[cur[COL.tipo]]||"";
+  head.innerHTML = `
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+      <span class="pill ${tipoCls}">${cur[COL.tipo]}</span>
+      <span class="pill">${cur[COL.fase]}</span>
+      <span class="pill">${num(cur[COL.ore],1)} ore</span>
+    </div>
+    <p style="margin:0 0 12px;font-weight:600;font-size:15px">${cur[COL.focus]}</p>`;
+
+  const dow = (new Date(t).getDay()+6)%7; // 0 = lunedì
+  // Da S22 la forza extra si sposta al lunedì e il venerdì si libera;
+  // prima di S22 vale l'inverso. La colonna è la stessa, cambia il giorno.
+  const forzaAlLunedi = cur[COL.n] >= 22;
+  const giorni = [
+    {n:"Lunedì",    s: forzaAlLunedi ? cur[COL.gf] : "Riposo", m: forzaAlLunedi ? cur[COL.mf] : 0},
+    {n:"Martedì",   s: cur[COL.g1], m: cur[COL.m1]},
+    {n:"Mercoledì", s: cur[COL.g3], m: cur[COL.m3]},
+    {n:"Giovedì",   s: cur[COL.g2], m: cur[COL.m2]},
+    {n:"Venerdì",   s: forzaAlLunedi ? "—" : cur[COL.gf], m: forzaAlLunedi ? 0 : cur[COL.mf]},
+    {n:"Sabato",    s: "—", m: 0},
+    {n:"Domenica",  s: cur[COL.gw], m: cur[COL.mw]}
+  ];
+  dl.innerHTML="";
+  giorni.forEach((g,k)=>{
+    const nome = (!g.s || g.s==="—") ? "Riposo" : g.s;
+    const isT = (k===dow);
+    dl.appendChild(el("div","day"+(isT?" today":""),
+      `<div class="dn">${g.n}${isT?" · oggi":""}</div>
+       <div class="ds">${nome}</div>
+       ${g.m?`<div class="dm">${g.m} min</div>`:""}`));
+  });
+
+  dl.appendChild(el("details","",
+    `<summary>Piano B se salta</summary><div class="body">${cur[COL.pianoB]}</div>`));
+
+  renderProssime(); renderZone(); renderTest();
+}
+
+function renderProssime(){
+  const t=oggi();
+  const next = PIANO.filter(r=>r[COL.dal]>t).slice(0,5);
+  const h=$("#nextWeeks"); h.innerHTML="";
+  if(!next.length){ h.innerHTML='<p class="note">Nessuna settimana successiva.</p>'; return; }
+  next.forEach(r=>{
+    const cls={Carico:"carico",Scarico:"scarico",Test:"test",Gara:"gara",Taper:"taper"}[r[COL.tipo]]||"";
+    h.appendChild(el("div","day",
+      `<div class="dn">S${r[COL.n]} · ${fmtD(r[COL.dal])}–${fmtD(r[COL.al])} <span class="pill ${cls}">${r[COL.tipo]}</span></div>
+       <div class="ds">${r[COL.focus]}</div>
+       <div class="dm">${num(r[COL.ore],1)} ore previste</div>`));
+  });
+}
+
+function renderZone(){
+  const f = cfg.ftp;
+  $("#zoneFtp").textContent = "FTP "+f+" W";
+  let h="<tr><th>Zona</th><th>Nome</th><th class='num'>% FTP</th><th class='num'>Watt</th></tr>";
+  ZONE_POT.forEach(z=>{
+    const lo=Math.round(f*z[2]), hi=z[3]?Math.round(f*z[3]):null;
+    h+=`<tr><td class="osw"><strong>${z[0]}</strong></td><td>${z[1]}</td>
+        <td class="num">${(z[2]*100).toFixed(0)}–${z[3]?(z[3]*100).toFixed(0):"+"}%</td>
+        <td class="num">${lo}–${hi??"+"}</td></tr>`;
+  });
+  $("#zonePow").innerHTML=h;
+
+  let h2="<tr><th>Zona</th><th>Nome</th><th class='num'>bpm</th></tr>";
+  ZONE_FC.forEach(z=> h2+=`<tr><td class="osw"><strong>${z[0]}</strong></td><td>${z[1]}</td>
+      <td class="num">${z[2]}–${z[3]??"+"}</td></tr>`);
+  $("#zoneHr").innerHTML=h2;
+}
+
+function renderTest(){
+  let h="<tr><th>Quando</th><th>Tipo</th><th class='num'>FTP</th><th class='num'>W/kg</th></tr>";
+  TEST_FTP.forEach(r=>{
+    const wkg = (r[3]&&r[4]) ? (r[3]/r[4]).toFixed(2) : "—";
+    h+=`<tr><td>${r[1]}${r[0]?`<br><span class="muted mono" style="font-size:11px">${r[0]}</span>`:""}</td>
+        <td>${r[2]}</td><td class="num">${r[3]??"—"}</td><td class="num">${wkg}</td></tr>`;
+  });
+  $("#testTable").innerHTML=h;
+}
+
+/* ===================== USCITE ===================== */
+function renderUscite(){
+  const acts = Object.values(DATA?.activities||{})
+    .filter(a=>a.start_time).sort((a,b)=> b.start_time.localeCompare(a.start_time));
+  const h=$("#actList"); h.innerHTML="";
+  if(!acts.length){ h.innerHTML='<p class="note">Nessuna uscita in archivio.</p>'; return; }
+
+  acts.slice(0,15).forEach(a=>{
+    const wb = (a.avg_power_w&&a.avg_hr) ? (a.avg_power_w/a.avg_hr).toFixed(2) : null;
+    const bits=[];
+    if(a.distance_km) bits.push(`${num(a.distance_km,1)} km`);
+    if(a.duration_min) bits.push(`${Math.floor(a.duration_min/60)}h${String(Math.round(a.duration_min%60)).padStart(2,"0")}`);
+    if(a.avg_hr) bits.push(`${a.avg_hr} bpm medi`);
+    if(a.avg_power_w) bits.push(`${a.avg_power_w} W medi`);
+    if(a.normalized_power_w) bits.push(`NP ${a.normalized_power_w} W`);
+    if(wb) bits.push(`${wb} W/battito`);
+    const tss = a.tss ? `<span class="pill">TSS ${a.tss}</span>` : "";
+    const stima = a.tss_source && a.tss_source!=="power"
+      ? `<span class="pill" style="border-color:var(--orange);color:var(--orange)">stima</span>` : "";
+    const pc = a.power_curve && Object.keys(a.power_curve).length
+      ? `<div class="dm" style="margin-top:4px">${Object.entries(a.power_curve).map(([k,v])=>`${k} ${v}W`).join(" · ")}</div>` : "";
+    h.appendChild(el("div","day",
+      `<div class="dn">${a.start_time.slice(0,10).split("-").reverse().join("/")} ${tss} ${stima}</div>
+       <div class="ds">${a.name||"Uscita"}</div>
+       <div class="dd">${bits.join(" · ")}</div>${pc}`));
+  });
+
+  /* migliori potenze */
+  const best={};
+  acts.forEach(a=>{
+    Object.entries(a.power_curve||{}).forEach(([k,v])=>{
+      if(!best[k] || v>best[k].v) best[k]={v, d:a.start_time.slice(0,10)};
+    });
+  });
+  const ord=["5min","10min","20min","30min","45min","60min"];
+  let t="<tr><th>Durata</th><th class='num'>Watt</th><th class='num'>W/kg</th><th>Quando</th></tr>";
+  ord.forEach(k=>{ if(best[k])
+    t+=`<tr><td class="osw"><strong>${k}</strong></td><td class="num">${best[k].v}</td>
+        <td class="num">${cfg.peso?(best[k].v/cfg.peso).toFixed(2):"—"}</td>
+        <td class="mono" style="font-size:11.5px">${best[k].d.split("-").reverse().join("/")}</td></tr>`;});
+  $("#pcTable").innerHTML = t;
+}
+
+/* ===================== CARICAMENTO ===================== */
+async function autoLoad(){
+  const msg=$("#loadMsg"); msg.className=""; msg.textContent="Carico…";
+  try{
+    const [d,l] = await Promise.allSettled([
+      fetch("data.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw 0;return r.json();}),
+      fetch("training_load.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw 0;return r.json();})
+    ]);
+    if(d.status!=="fulfilled") throw new Error("data.json non trovato nella cartella della pagina");
+    DATA=d.value; if(l.status==="fulfilled") LOAD=l.value;
+    applyFtpFromData(); saveLS(); renderAll();
+    msg.className="ok"; msg.textContent="Dati aggiornati.";
+  }catch(e){
+    msg.className="err";
+    msg.textContent = "Caricamento automatico non riuscito: "+e.message+". Usa «Carica file».";
+  }
+}
+
+function applyFtpFromData(){
+  const c = DATA?.current;
+  if(c?.ftp_watts) cfg.ftp = c.ftp_watts;
+  if(c?.weight_kg) cfg.peso = c.weight_kg;
+  $("#ftpInput").value=cfg.ftp; $("#pesoInput").value=cfg.peso;
+}
+
+function handleFiles(files){
+  const msg=$("#loadMsg");
+  let done=0, tot=files.length;
+  [...files].forEach(f=>{
+    const rd=new FileReader();
+    rd.onload=()=>{
+      try{
+        const j=JSON.parse(rd.result);
+        if(j.wellness||j.activities) DATA=j;
+        else if(j.series) LOAD=j;
+        done++;
+        if(done===tot){
+          applyFtpFromData(); saveLS(); renderAll();
+          msg.className="ok"; msg.textContent="File caricati e salvati nel browser.";
+        }
+      }catch(e){ msg.className="err"; msg.textContent="File non leggibile: "+f.name; }
+    };
+    rd.readAsText(f);
+  });
+}
+
+function renderSrc(){
+  const w=DATA?.wellness?Object.keys(DATA.wellness).length:0;
+  const a=DATA?.activities?Object.keys(DATA.activities).length:0;
+  const s=LOAD?.series?LOAD.series.length:0;
+  $("#srcInfo").innerHTML = DATA
+    ? `<span class="pill">${w} giorni</span><span class="pill">${a} uscite</span>
+       <span class="pill">${s} giorni di carico</span>
+       <span class="muted">aggiornato al ${DATA.current?.as_of||"—"}</span>`
+    : `<span class="muted">Nessun dato caricato.</span>`;
+}
+
+function renderAll(){
+  if(!DATA) return;
+  renderOggi(); renderForma(); renderPiano(); renderUscite(); renderSrc();
+}
+
+/* ===================== INIT ===================== */
+document.querySelectorAll("nav.tabs button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("on"));
+    document.querySelectorAll("section.pane").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); $("#p-"+b.dataset.p).classList.add("on");
+    window.scrollTo({top:0});
+  };
+});
+$("#btnReload").onclick=autoLoad;
+$("#btnPick").onclick=()=>$("#filePick").click();
+$("#filePick").onchange=e=>handleFiles(e.target.files);
+$("#btnClear").onclick=()=>{
+  localStorage.removeItem(LS); DATA=null; LOAD=null;
+  $("#loadMsg").className="ok"; $("#loadMsg").textContent="Cache svuotata.";
+  renderSrc();
+};
+$("#ftpInput").onchange=e=>{cfg.ftp=+e.target.value||cfg.ftp; saveLS(); renderAll();};
+$("#pesoInput").onchange=e=>{cfg.peso=+e.target.value||cfg.peso; saveLS(); renderAll();};
+
+$("#ftpInput").value=cfg.ftp; $("#pesoInput").value=cfg.peso;
+renderPiano();            // il piano si vede anche senza dati
+if(loadLS()){ applyFtpFromData(); renderAll(); }
+renderSrc();
+autoLoad();               // poi prova ad aggiornare
+</script>
 </body>
 </html>
