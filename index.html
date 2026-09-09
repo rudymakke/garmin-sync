@@ -708,8 +708,17 @@ function renderOggi(){
     slp==null?"":lvl(slp>=7,slp>=6), sparkline(last14.map(d=>w[d].sleep_hours??null),"#93C24E"));
   tile("Energia",L.body_battery_high!=null?L.body_battery_high:"—","",
     L.body_battery_low!=null?`scesa fino a ${L.body_battery_low}`:"", "");
-  tile("Stress",nn(L.stress_avg),"","media della giornata",
-    L.stress_avg==null?"":lvl(L.stress_avg<=25,L.stress_avg<=35));
+
+  // Lo stress e' una media dell'intera giornata: se lo prendessimo da oggi,
+  // appena sveglio mostrerebbe un numero bassissimo e fuorviante perche' la
+  // giornata e' appena iniziata. Ieri e' invece un dato gia' completo.
+  const yDate=days[days.length-2];
+  const Y=yDate?w[yDate]:null;
+  const stressTrend=days.slice(-15,-1); // ultimi 14 giorni chiusi, esclude oggi
+  tile("Stress",Y?nn(Y.stress_avg):"—","",
+    Y?`di ieri (${dd(Y.date)}), giornata completa`:"nessun dato di ieri disponibile",
+    Y&&Y.stress_avg!=null?lvl(Y.stress_avg<=25,Y.stress_avg<=35):"",
+    sparkline(stressTrend.map(d=>w[d].stress_avg??null),"#F2A93B"));
 
   const giu=hrv!=null&&hBase&&hrv<hBase, alto=rhr!=null&&rhr>45, corto=slp!=null&&slp<5;
   let v,score;
