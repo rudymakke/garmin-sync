@@ -289,6 +289,11 @@ ol.rank li:first-child::before{background:var(--amber);border-color:var(--amber)
     <h2>Il sonno ti condiziona davvero?</h2>
     <p class="lede" id="scatterLede"></p>
     <div id="scatterPlot"></div>
+    <div class="key">
+      <span><i style="background:#F2A93B"></i>ultime 7 notti</span>
+      <span><i style="background:#4FC3DB"></i>notti precedenti</span>
+      <span><i style="background:#4FC3DB;opacity:.6"></i>linea tratteggiata: tendenza generale</span>
+    </div>
   </div>
 </section>
 
@@ -304,7 +309,7 @@ ol.rank li:first-child::before{background:var(--amber);border-color:var(--amber)
     <div class="key">
       <span><i style="background:var(--ice)"></i>fitness accumulata</span>
       <span><i style="background:var(--amber)"></i>fatica recente</span>
-      <span><i style="background:var(--amber)"></i>freschezza</span>
+      <span><i style="background:#B18CE8"></i>freschezza</span>
     </div>
     <details>
       <summary>Cosa vogliono dire questi tre numeri</summary>
@@ -628,9 +633,9 @@ function plot(host,series,o={}){
 }
 
 function bars(host,vals,labs,o={}){
-  const W=760,H=o.h||170,P={t:14,r:10,b:24,l:32};
+  const W=760,H=o.h||170,P={t:24,r:10,b:24,l:32};
   if(!vals.length){host.innerHTML='<p class="lede">Nessun dato.</p>';return;}
-  const mx=Math.max(...vals,1)*1.18, bw=(W-P.l-P.r)/vals.length;
+  const mx=Math.max(...vals,1)*1.28, bw=(W-P.l-P.r)/vals.length;
   const Y=v=>P.t+(H-P.t-P.b)*(1-v/mx);
   let s=`<svg viewBox="0 0 ${W} ${H}" class="plot" preserveAspectRatio="none" style="height:${H}px">
     <defs><linearGradient id="gb" x1="0" y1="0" x2="0" y2="1">
@@ -640,9 +645,12 @@ function bars(host,vals,labs,o={}){
         <text x="2" y="${y+3.5}" fill="#8FA1B6" font-size="10" font-family="Archivo,sans-serif">${Math.round(v)}</text>`;}
   vals.forEach((v,i)=>{
     const h=(H-P.t-P.b)*(v/mx), lastOne=i===vals.length-1;
+    const cx=P.l+i*bw+bw/2;
     s+=`<rect x="${P.l+i*bw+bw*.16}" y="${Y(v)}" width="${bw*.68}" height="${Math.max(h,1)}"
          fill="${lastOne?"#F2A93B":"url(#gb)"}" rx="3"/>`;
-    if(labs[i])s+=`<text x="${P.l+i*bw+bw/2}" y="${H-6}" fill="#8FA1B6" font-size="9.5"
+    if(v>0)s+=`<text x="${cx}" y="${Y(v)-6}" fill="${lastOne?"#F2A93B":"#8FA1B6"}" font-size="10"
+      text-anchor="middle" font-family="Archivo,sans-serif">${Math.round(v)}</text>`;
+    if(labs[i])s+=`<text x="${cx}" y="${H-6}" fill="#8FA1B6" font-size="9"
       text-anchor="middle" font-family="Archivo,sans-serif">${labs[i]}</text>`;
   });
   host.innerHTML=s+"</svg>";
@@ -746,21 +754,21 @@ function renderForma(){
   const tail=s.slice(-30);
   tile("Fitness",nn(L.ctl,1),"condizione di fondo","",sparkline(tail.map(p=>p.ctl),"#4FC3DB"));
   tile("Fatica",nn(L.atl,1),"ultima settimana","",sparkline(tail.map(p=>p.atl),"#F2A93B"));
-  tile("Freschezza",(L.tsb>0?"+":"")+nn(L.tsb,1),stato,cls,sparkline(tail.map(p=>p.tsb),"#F2A93B"));
+  tile("Freschezza",(L.tsb>0?"+":"")+nn(L.tsb,1),stato,cls,sparkline(tail.map(p=>p.tsb),"#B18CE8"));
   tile("Carico 7 giorni",nn(s.slice(-7).reduce((a,b)=>a+b.tss,0)),"somma degli sforzi","");
 
   const view=s.slice(-90), lab=view.map((p,i)=>i%15===0?dd(p.date):"");
   plot($("#pmcPlot"),[
     {v:view.map(p=>p.ctl),c:"#4FC3DB",area:true,last:true},
     {v:view.map(p=>p.atl),c:"#F2A93B",w:1.9},
-    {v:view.map(p=>p.tsb),c:"#F2A93B",w:1.7,dash:"5 4"}
+    {v:view.map(p=>p.tsb),c:"#B18CE8",w:1.7,dash:"5 4"}
   ],{lab,zero:true,h:220,id:"p"});
 
   const wk={};
   s.forEach(p=>{const d=new Date(p.date),o=(d.getDay()+6)%7,m=new Date(d);
     m.setDate(d.getDate()-o);const k=m.toISOString().slice(0,10);wk[k]=(wk[k]||0)+p.tss;});
   const ks=Object.keys(wk).sort().slice(-12);
-  bars($("#loadPlot"),ks.map(k=>Math.round(wk[k])),ks.map((k,i)=>i%2===0?dd(k):""));
+  bars($("#loadPlot"),ks.map(k=>Math.round(wk[k])),ks.map(k=>dd(k)));
 
   const wkg=cfg.kg?cfg.ftp/cfg.kg:0, tgt=3.7;
   const pct=Math.min(1,wkg/tgt);
@@ -1062,6 +1070,7 @@ function renderScatter(){
   const X=v=>P.l+(v-x0)/(x1-x0)*(W-P.l-P.r);
   const Y=v=>P.t+(H-P.t-P.b)*(1-(v-y0)/(y1-y0));
   let s=`<svg viewBox="0 0 ${W} ${H}" class="plot" preserveAspectRatio="none" style="height:${H}px">`;
+  s+=`<text x="${P.l}" y="9" fill="#8FA1B6" font-size="10" font-family="Archivo,sans-serif">HRV la mattina dopo (ms)</text>`;
   for(let k=0;k<=3;k++){const v=y0+(y1-y0)*k/3,y=Y(v);
     s+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#1C2E45"/>
         <text x="2" y="${y+3.5}" fill="#8FA1B6" font-size="10" font-family="Archivo,sans-serif">${Math.round(v)}</text>`;}
@@ -1079,6 +1088,8 @@ function renderScatter(){
   for(let v=Math.ceil(x0);v<=Math.floor(x1);v++)
     s+=`<text x="${X(v)}" y="${H-8}" fill="#8FA1B6" font-size="10" text-anchor="middle"
          font-family="Archivo,sans-serif">${v} h</text>`;
+  s+=`<text x="${W-P.r}" y="${H-8}" fill="#8FA1B6" font-size="10" text-anchor="end"
+       font-family="Archivo,sans-serif">ore di sonno →</text>`;
   host.innerHTML=s+"</svg>";
 }
 
