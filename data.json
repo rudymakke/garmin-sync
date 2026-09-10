@@ -272,8 +272,8 @@
       "sleep_score": 70,
       "body_battery_low": 44,
       "body_battery_high": 86,
-      "stress_avg": 13,
-      "steps": 289,
+      "stress_avg": 15,
+      "steps": 413,
       "training_readiness": null
     }
   },
@@ -646,6 +646,7 @@
     "ftp_watts": 230,
     "weight_kg": 72.2,
     "weight_date": "2026-09-04",
-    "max_hr_observed": 179.0
+    "max_hr_observed": 179.0,
+    "hr_zones": null
   }
 }
