@@ -519,6 +519,12 @@ const today=()=>new Date().toISOString().slice(0,10);
 const dd=s=>{const p=s.split("-");return p[2]+"/"+p[1];};
 const dayDiff=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
 const nn=(v,d=0)=>v==null||isNaN(v)?"—":Number(v).toFixed(d).replace(".",",");
+// converte ore decimali (6.8) in ore e minuti (6h 48'), come le durate altrove nella pagina
+const hm=v=>{
+  if(v==null||isNaN(v))return "—";
+  const tot=Math.round(v*60), h=Math.floor(tot/60), m=tot%60;
+  return h+"h "+String(m).padStart(2,"0")+"′";
+};
 const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -610,7 +616,7 @@ function plot(host,series,o={}){
   for(let k=0;k<=3;k++){
     const v=lo+(hi-lo)*k/3,y=Y(v);
     s+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#1C2E45"/>`;
-    s+=`<text x="2" y="${y+3.5}" fill="#8FA1B6" font-size="10" font-family="Archivo,sans-serif">${nn(v,o.dec||0)}</text>`;
+    s+=`<text x="2" y="${y+3.5}" fill="#8FA1B6" font-size="10" font-family="Archivo,sans-serif">${o.fmt?o.fmt(v):nn(v,o.dec||0)}</text>`;
   }
   if(o.band){
     s+=`<rect x="${P.l}" y="${Y(o.band[1])}" width="${W-P.l-P.r}" height="${Math.abs(Y(o.band[0])-Y(o.band[1]))}"
@@ -704,7 +710,7 @@ function renderOggi(){
     dev==null?"":lvl(dev>=-3,dev>=-10), sparkline(last14.map(d=>w[d].hrv_overnight_ms??null),"#F2A93B"));
   tile("Battiti a riposo",nn(rhr)," bpm", rBase?`di solito ${nn(rBase,1)}`:"",
     rhr==null?"":lvl(rhr<=45,rhr<=48), sparkline(last14.map(d=>w[d].resting_hr??null),"#4FC3DB"));
-  tile("Sonno",nn(slp,1)," h", L.sleep_score?`qualità ${L.sleep_score} su 100`:"",
+  tile("Sonno",hm(slp),"", L.sleep_score?`qualità ${L.sleep_score} su 100`:"",
     slp==null?"":lvl(slp>=7,slp>=6), sparkline(last14.map(d=>w[d].sleep_hours??null),"#93C24E"));
   tile("Energia",L.body_battery_high!=null?L.body_battery_high:"—","",
     L.body_battery_low!=null?`scesa fino a ${L.body_battery_low}`:"", "");
@@ -737,7 +743,7 @@ function renderOggi(){
     {lab,id:"h",band:hBase?[hBase-sd,hBase+sd]:null,h:190});
   plot($("#sleepPlot"),[
     {v:last21.map(d=>w[d].sleep_hours??null),c:"#4FC3DB",dot:true},
-  ],{lab,dec:1,id:"s",h:150});
+  ],{lab,fmt:hm,id:"s",h:150});
   const second=mk("div");
   plot(second,[{v:last21.map(d=>w[d].resting_hr??null),c:"#F2A93B",dot:true}],{lab,id:"r",h:140});
   $("#sleepPlot").appendChild(second);
@@ -957,13 +963,19 @@ function renderCompare(){
   const ser=LOAD?.series||[];
   const tssOf=ds=>{const s=new Set(ds);return ser.filter(p=>s.has(p.date)).reduce((a,b)=>a+b.tss,0);};
 
+  const fmtDiffMin=v=>{ // differenza di sonno espressa in minuti, più leggibile di "0,4 h"
+    if(v==null)return "—";
+    const m=Math.round(v*60);
+    return (m>0?"+":"")+m+"′";
+  };
+
   const rows=[
-    ["Variabilità","hrv_overnight_ms"," ms",1,true],
-    ["Battiti a riposo","resting_hr"," bpm",0,false],
-    ["Sonno","sleep_hours"," h",1,true],
-    ["Stress","stress_avg","",0,false]
+    ["Variabilità","hrv_overnight_ms"," ms",1,true,null,null],
+    ["Battiti a riposo","resting_hr"," bpm",0,false,null,null],
+    ["Sonno","sleep_hours","",1,true,hm,fmtDiffMin],
+    ["Stress","stress_avg","",0,false,null,null]
   ];
-  rows.forEach(([lab,key,unit,dec,higherBetter])=>{
+  rows.forEach(([lab,key,unit,dec,higherBetter,fmtNow,fmtDiff])=>{
     const a=pick(cur,key), b=pick(prev,key);
     if(a==null){return;}
     const diff=(b!=null)?a-b:null;
@@ -974,10 +986,12 @@ function renderCompare(){
       cls=good?"up-good":"down-bad";
       arr=`<span class="arrow ${diff>0?"u":"d"}"></span>`;
     }
+    const nowTxt=fmtNow?fmtNow(a):nn(a,dec);
+    const diffTxt=diff==null?"—":(fmtDiff?fmtDiff(diff):(diff>0?"+":"")+nn(diff,dec));
     host.appendChild(mk("div","delta",
       `<div class="lab">${lab}</div>
-       <div class="now">${nn(a,dec)}<span style="font-size:13px;font-weight:500;color:var(--lime-dim)">${unit}</span></div>
-       <div class="vs ${cls}">${arr}<b>${diff==null?"—":(diff>0?"+":"")+nn(diff,dec)}</b>
+       <div class="now">${nowTxt}<span style="font-size:13px;font-weight:500;color:var(--lime-dim)">${unit}</span></div>
+       <div class="vs ${cls}">${arr}<b>${diffTxt}</b>
          <span style="color:var(--lime-dim)">sui 7 prima</span></div>`));
   });
 
