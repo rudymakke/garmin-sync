@@ -370,7 +370,7 @@ ol.rank li:first-child::before{background:var(--amber);border-color:var(--amber)
     <details>
       <summary>Fasce cardiache</summary>
       <div class="in"><table id="hrTable"></table>
-      <p style="margin-top:10px">Sono quelle misurate su Strava, non una percentuale della frequenza massima: la percentuale sottostimava la Z2 di una decina di battiti.</p></div>
+      <p class="lede" id="hrSource" style="margin-top:10px"></p></div>
     </details>
   </div>
   <div class="panel">
@@ -876,8 +876,20 @@ function renderZone(){
   });
   $("#zonePlot").innerHTML=s+"</svg>";
 
+  // Le zone FC arrivano da Garmin quando la sync le trova in un formato
+  // riconoscibile; altrimenti si torna alla tabella incorporata, cosi' la
+  // pagina non resta mai vuota.
+  const remote=DATA?.current?.hr_zones;
+  const HR_NAMES=["Recupero","Fondo lento","Fondo medio","Soglia","Massimale","Zona 6","Zona 7"];
   let h="<tr><th>Zona</th><th>Nome</th><th class='n'>battiti</th></tr>";
-  ZH.forEach(z=>h+=`<tr><td>${z[0]}</td><td>${z[1]}</td><td class="n">${z[2]}–${z[3]??"+"}</td></tr>`);
+  if(Array.isArray(remote)&&remote.length>=3){
+    remote.forEach(z=>h+=`<tr><td>Z${z.zone}</td><td>${HR_NAMES[z.zone-1]||"Zona "+z.zone}</td>
+      <td class="n">${z.low}–${z.high??"+"}</td></tr>`);
+    $("#hrSource").textContent="Secondo le zone configurate sul tuo profilo Garmin.";
+  }else{
+    ZH.forEach(z=>h+=`<tr><td>${z[0]}</td><td>${z[1]}</td><td class="n">${z[2]}–${z[3]??"+"}</td></tr>`);
+    $("#hrSource").textContent="Garmin non ha restituito zone configurate in questo momento: valori di riserva, da verificare.";
+  }
   $("#hrTable").innerHTML=h;
 }
 
