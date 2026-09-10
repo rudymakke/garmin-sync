@@ -880,15 +880,18 @@ function renderZone(){
   // riconoscibile; altrimenti si torna alla tabella incorporata, cosi' la
   // pagina non resta mai vuota.
   const remote=DATA?.current?.hr_zones;
-  const maxHr=DATA?.current?.max_hr_configured||DATA?.current?.max_hr_observed;
+  const maxHr=DATA?.current?.max_hr_used;
+  const hrSrc=DATA?.current?.max_hr_source;
   const HR_NAMES=["Recupero","Fondo lento","Fondo medio","Soglia","Massimale","Zona 6","Zona 7"];
   let h="<tr><th>Zona</th><th>Nome</th><th class='n'>battiti</th></tr>";
   if(Array.isArray(remote)&&remote.length>=3){
     remote.forEach(z=>h+=`<tr><td>Z${z.zone}</td><td>${HR_NAMES[z.zone-1]||"Zona "+z.zone}</td>
       <td class="n">${z.low}–${z.high??"+"}</td></tr>`);
-    const fonte=DATA?.current?.max_hr_configured
-      ? `Calcolate al 50-100% della tua FC max Garmin (${maxHr} bpm).`
-      : `Garmin non ha una FC max configurata: qui sotto al 50-100% della massima osservata nelle uscite recenti (${maxHr} bpm), da aggiornare quando la imposti sul profilo.`;
+    const fonte={
+      garmin:`Calcolate al 50-100% della tua FC max Garmin (${maxHr} bpm).`,
+      manuale:`Calcolate al 50-100% della FC max che hai indicato tu (${maxHr} bpm) — Garmin non la restituisce dal profilo, anche se l'hai impostata sui dispositivi.`,
+      osservata:`Garmin non ha una FC max disponibile: qui sotto al 50-100% della massima osservata nelle uscite recenti (${maxHr} bpm).`,
+    }[hrSrc] || `Calcolate al 50-100% di ${maxHr} bpm.`;
     $("#hrSource").textContent=fonte;
   }else{
     ZH.forEach(z=>h+=`<tr><td>${z[0]}</td><td>${z[1]}</td><td class="n">${z[2]}–${z[3]??"+"}</td></tr>`);
