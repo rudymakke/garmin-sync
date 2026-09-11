@@ -278,14 +278,14 @@
     },
     "2026-09-11": {
       "date": "2026-09-11",
-      "resting_hr": 47,
-      "hrv_overnight_ms": null,
-      "sleep_hours": null,
-      "sleep_score": null,
+      "resting_hr": 46,
+      "hrv_overnight_ms": 42,
+      "sleep_hours": 7.2,
+      "sleep_score": 73,
       "body_battery_low": 43,
-      "body_battery_high": 45,
-      "stress_avg": 23,
-      "steps": null,
+      "body_battery_high": 75,
+      "stress_avg": 24,
+      "steps": 3205,
       "training_readiness": null
     }
   },
