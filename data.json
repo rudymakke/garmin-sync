@@ -294,10 +294,22 @@
       "hrv_overnight_ms": 49,
       "sleep_hours": 6.8,
       "sleep_score": 78,
-      "body_battery_low": 28,
+      "body_battery_low": 16,
       "body_battery_high": 77,
-      "stress_avg": 22,
-      "steps": 1788,
+      "stress_avg": 31,
+      "steps": 16223,
+      "training_readiness": null
+    },
+    "2026-09-13": {
+      "date": "2026-09-13",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 50,
+      "sleep_hours": 8.8,
+      "sleep_score": 82,
+      "body_battery_low": 39,
+      "body_battery_high": 86,
+      "stress_avg": 17,
+      "steps": 4424,
       "training_readiness": null
     }
   },
@@ -755,10 +767,25 @@
       },
       "tss": 132.5,
       "tss_source": "power"
+    },
+    "24336137537": {
+      "id": 24336137537,
+      "name": "Genova Camminata",
+      "type": "walking",
+      "start_time": "2026-09-12 16:47:59",
+      "duration_min": 75.6,
+      "distance_km": 6.64,
+      "calories": 401.0,
+      "avg_hr": 90.0,
+      "max_hr": 118.0,
+      "training_effect_aerobic": 1.2,
+      "training_effect_anaerobic": 0.0,
+      "tss": 30.2,
+      "tss_source": "stima_da_training_effect"
     }
   },
   "current": {
-    "as_of": "2026-09-12",
+    "as_of": "2026-09-13",
     "ftp_watts": 230,
     "weight_kg": 72.2,
     "weight_date": "2026-09-04",
