@@ -330,10 +330,22 @@
       "hrv_overnight_ms": 61,
       "sleep_hours": 6.5,
       "sleep_score": 75,
-      "body_battery_low": 67,
+      "body_battery_low": 34,
       "body_battery_high": 99,
-      "stress_avg": 18,
-      "steps": 2234,
+      "stress_avg": 21,
+      "steps": 7019,
+      "training_readiness": null
+    },
+    "2026-09-16": {
+      "date": "2026-09-16",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 52,
+      "sleep_hours": 6.3,
+      "sleep_score": 76,
+      "body_battery_low": 44,
+      "body_battery_high": 90,
+      "stress_avg": 24,
+      "steps": 4108,
       "training_readiness": null
     }
   },
@@ -620,10 +632,10 @@
       "max_hr": 179.0,
       "training_effect_aerobic": 4.1,
       "training_effect_anaerobic": 1.9,
-      "avg_power_w": 178,
+      "avg_power_w": null,
       "max_power_w": 434,
-      "normalized_power_w": 193,
-      "avg_cadence": 79,
+      "normalized_power_w": null,
+      "avg_cadence": null,
       "max_cadence": 100,
       "power_zones": [
         {
@@ -697,8 +709,8 @@
         "45min": 168,
         "60min": 144
       },
-      "tss": 93.1,
-      "tss_source": "power"
+      "tss": 62.9,
+      "tss_source": "stima_da_zone"
     },
     "24336137537": {
       "id": 24336137537,
@@ -809,7 +821,7 @@
     }
   },
   "current": {
-    "as_of": "2026-09-15",
+    "as_of": "2026-09-16",
     "ftp_watts": 230,
     "weight_kg": 72.2,
     "weight_date": "2026-09-04",
