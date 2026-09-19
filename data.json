@@ -380,8 +380,8 @@
       "sleep_score": 45,
       "body_battery_low": 25,
       "body_battery_high": 65,
-      "stress_avg": 25,
-      "steps": 5535,
+      "stress_avg": 28,
+      "steps": 8111,
       "training_readiness": null
     }
   },
