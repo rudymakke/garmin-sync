@@ -148,6 +148,15 @@ tr:last-child td{border-bottom:none;}
 .ride .facts{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;}
 .ride .facts b{display:block;font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;}
 .ride .facts span{color:var(--lime-dim);font-size:11px;}
+.ride{cursor:pointer;transition:border-color .15s,background .15s;}
+.ride:hover{border-color:var(--ice);background:#1F324A;}
+.cmp tbody tr{cursor:pointer;}
+.cmp tbody tr:hover{background:rgba(79,195,219,.08);}
+.row[data-aid]{cursor:pointer;}
+.row[data-aid]:hover{background:#1A2C42;}
+.backbtn{display:inline-flex;align-items:center;gap:6px;background:transparent;border:none;
+  color:var(--lime-dim);font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;padding:2px 0;}
+.backbtn:hover{color:var(--ice);}
 
 /* ---------- controlli ---------- */
 button.btn{font-family:inherit;font-size:13px;font-weight:600;padding:9px 16px;
@@ -442,6 +451,34 @@ ol.rank li:first-child::before{background:var(--amber);border-color:var(--amber)
   <div class="panel">
     <h2>Dove stanno i dati</h2>
     <p class="lede">La pagina cerca i file nella cartella in cui è pubblicata. Se non li trova puoi caricarli a mano da Drive: restano poi salvati nel browser e alla riapertura compaiono subito, anche senza rete. Niente esce dal tuo dispositivo: dietro questa pagina non c'è nessun server.</p>
+  </div>
+</section>
+
+<section class="pane" id="p-dettaglio">
+  <button class="backbtn" data-back>&larr; Torna alle uscite</button>
+  <div class="panel" id="dettHead" style="margin-top:12px"></div>
+  <div class="panel">
+    <h2>I numeri della pedalata</h2>
+    <div class="tiles" id="dettTiles"></div>
+  </div>
+  <div class="panel" id="dettZoneWrap">
+    <h2>Zone di potenza</h2>
+    <p class="lede">Minuti passati in ciascuna zona durante questa uscita.</p>
+    <div id="dettZone"></div>
+  </div>
+  <div class="panel" id="dettCurveWrap">
+    <h2>Curva di potenza di questa uscita</h2>
+    <p class="lede">Il tuo massimale per ciascuna durata, dentro questa singola pedalata. La banda indica la soglia attuale.</p>
+    <div id="dettCurve"></div>
+  </div>
+  <div class="panel" id="dettPlanWrap">
+    <h2>Rispetto al piano</h2>
+    <p class="lede" id="dettPlan"></p>
+  </div>
+  <div class="panel" id="dettTrendWrap">
+    <h2>Rispetto alle uscite recenti</h2>
+    <p class="lede">Confronto con la media delle uscite in bici precedenti a questa.</p>
+    <div class="deltas" id="dettTrend"></div>
   </div>
 </section>
 
@@ -930,12 +967,14 @@ function renderUscite(){
         a.power_zones.map((z,i)=>`<i style="width:${(z.minutes||0)/tot*100}%;background:${ZC[i]||"#26405E"}"></i>`).join("")+
         `</div><div class="when" style="margin-top:5px">tempo per zona di potenza</div>`;
     }
-    h.appendChild(mk("div","ride",
+    const card=mk("div","ride",
       `<div class="top"><span class="when">${a.start_time.slice(0,10).split("-").reverse().join("/")}</span>
         ${a.tss?`<span class="tag ${stim?"stima":""}">${stim?"circa ":""}${a.tss} punti di carico</span>`:""}</div>
        <div class="title">${esc(a.name||"Uscita")}</div>
        <div class="facts">${f.map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join("")}</div>
-       ${zones}`));
+       ${zones}`);
+    if(a.id!=null) card.dataset.aid=a.id;
+    h.appendChild(card);
   });
 
   const best={};
@@ -1178,7 +1217,7 @@ function renderCmpTable(){
   acts.forEach(a=>{
     const v=wb(a);
     const top=(v!=null&&best&&Math.abs(v-best)<1e-9);
-    h+=`<tr>
+    h+=`<tr${a.id!=null?` data-aid="${esc(a.id)}"`:""}>
       <td>${a.start_time.slice(0,10).split("-").reverse().join("/")}</td>
       <td class="n">${nn(a.distance_km,1)}</td>
       <td class="n">${a.duration_min?Math.floor(a.duration_min/60)+"h"+String(Math.round(a.duration_min%60)).padStart(2,"0"):"—"}</td>
@@ -1283,6 +1322,121 @@ function indexActivities(){
   return by;
 }
 
+/* ===== dettaglio di una singola uscita =====
+   Cerca a quale seduta pianificata corrisponde l'attività (stessa logica
+   di abbinamento del Calendario) e disegna la pagina di dettaglio con i
+   soli dati che il sync Garmin fornisce davvero: niente stream secondo per
+   secondo, solo aggregati per uscita (potenza/FC medie, zone, power curve). */
+function findPlanMatch(id){
+  const byDate=indexActivities();
+  for(const r of PIANO){
+    const m=matchWeek(r,byDate);
+    const s=m.slots.find(sl=>sl.act&&sl.act.id===id);
+    if(s) return {r,s};
+  }
+  return null;
+}
+const TAG_OF_TIPO={Carico:"carico",Scarico:"scarico",Test:"test",Taper:"taper",Gara:"gara"};
+
+function renderDettaglio(a){
+  const acts=Object.values(DATA?.activities||{}).filter(x=>x.start_time)
+    .sort((x,y)=>x.start_time.localeCompare(y.start_time));
+
+  const dateLong=new Date(a.start_time.slice(0,10)+"T12:00:00")
+    .toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const match=findPlanMatch(a.id);
+  const tagCls=match?TAG_OF_TIPO[match.r[C.tipo]]||"":"";
+
+  $("#dettHead").innerHTML=`
+    <p class="lede" style="margin:0 0 4px;text-transform:capitalize">${esc(dateLong)}</p>
+    <h2 style="margin:0 0 8px">${esc(a.name||"Uscita")}</h2>
+    ${match?`<span class="tag ${tagCls}">${esc(match.r[C.tipo])} · settimana ${match.r[C.n]}</span>`:""}`;
+
+  const wb=(a.avg_power_w&&a.avg_hr)?a.avg_power_w/a.avg_hr:null;
+  const pctFtp=(a.avg_power_w&&cfg.ftp)?a.avg_power_w/cfg.ftp*100:null;
+  const stim=a.tss_source&&a.tss_source!=="power";
+  const durTxt=a.duration_min?Math.floor(a.duration_min/60)+"h"+String(Math.round(a.duration_min%60)).padStart(2,"0"):"—";
+  const tiles=[
+    ["Distanza",a.distance_km?nn(a.distance_km,1):"—","km",""],
+    ["Tempo in sella",durTxt,"",""],
+    ["Dislivello",a.elev_gain_m?nn(a.elev_gain_m):"—","m",""],
+    ["Potenza media",a.avg_power_w?nn(a.avg_power_w):"—","W",pctFtp!=null?nn(pctFtp)+"% della FTP":""],
+    ["FC media",a.avg_hr?nn(a.avg_hr):"—","bpm",""],
+    ["Watt per battito",wb!=null?nn(wb,2):"—","",""],
+    ["Carico",a.tss?nn(a.tss):"—","punti",stim?"stima, non da potenza":""]
+  ];
+  $("#dettTiles").innerHTML=tiles.map(([lab,v,unit,foot])=>`
+    <div class="tile"><div class="lab">${lab}</div>
+      <div class="big">${v}${unit?`<i> ${unit}</i>`:""}</div>
+      ${foot?`<div class="foot">${foot}</div>`:""}
+    </div>`).join("");
+
+  const zwrap=$("#dettZoneWrap");
+  if(a.power_zones?.length){
+    zwrap.classList.remove("hidden");
+    const labs=a.power_zones.map((z,i)=>ZP[i]?ZP[i][0]:"Z"+(i+1));
+    bars($("#dettZone"),a.power_zones.map(z=>z.minutes||0),labs,{h:170});
+  } else zwrap.classList.add("hidden");
+
+  const cwrap=$("#dettCurveWrap");
+  const pc=a.power_curve||{};
+  const ord=["5min","10min","20min","30min","45min","60min"].filter(k=>pc[k]!=null);
+  if(ord.length>=2){
+    cwrap.classList.remove("hidden");
+    plot($("#dettCurve"),[{v:ord.map(k=>pc[k]),c:"#F2A93B",area:true,dot:true,last:true}],
+      {id:"dc",lab:ord.map(k=>k.replace("min","′")),
+       band:cfg.ftp?[cfg.ftp*0.97,cfg.ftp*1.03]:null});
+  } else cwrap.classList.add("hidden");
+
+  const pwrap=$("#dettPlanWrap");
+  if(match){
+    const{r,s}=match;
+    const diffMin=Math.round((a.duration_min||0)-(s.m||0));
+    const diffTxt=(!s.m||diffMin===0)?"":`, ${diffMin>0?"+":""}${diffMin}′ rispetto ai ${s.m}′ previsti`;
+    pwrap.classList.remove("hidden");
+    $("#dettPlan").innerHTML=`Copre la seduta <strong>${esc(s.n)}</strong> del piano (${s.d}, settimana ${r[C.n]} — ${esc(r[C.focus])})${diffTxt}.`;
+  } else {
+    pwrap.classList.remove("hidden");
+    $("#dettPlan").textContent="Non risulta abbinata a nessuna seduta pianificata: probabilmente un'uscita extra, o una seduta di forza tracciata su Garmin.";
+  }
+
+  const twrap=$("#dettTrendWrap");
+  const idx=acts.findIndex(x=>x.id===a.id);
+  const prior=(idx<0?acts:acts.slice(0,idx)).filter(isBikeAct).slice(-10);
+  const cells=[];
+  const priorPw=prior.map(x=>x.avg_power_w).filter(v=>v!=null);
+  const priorWb=prior.map(x=>(x.avg_power_w&&x.avg_hr)?x.avg_power_w/x.avg_hr:null).filter(v=>v!=null);
+  if(priorPw.length>=3&&a.avg_power_w){
+    const m=avg(priorPw),d=a.avg_power_w-m;
+    cells.push(["Potenza media",nn(a.avg_power_w)+" W",d,0,Math.abs(d)<m*.03]);
+  }
+  if(priorWb.length>=3&&wb!=null){
+    const m=avg(priorWb),d=wb-m;
+    cells.push(["Watt per battito",nn(wb,2),d,2,Math.abs(d)<m*.03]);
+  }
+  if(cells.length){
+    twrap.classList.remove("hidden");
+    $("#dettTrend").innerHTML=cells.map(([lab,now,d,dec,isFlat])=>{
+      const cls=isFlat?"flat":(d>0?"up-good":"down-bad");
+      return `<div class="delta"><div class="lab">${lab}</div>
+        <div class="now">${now}</div>
+        <div class="vs ${cls}">${isFlat?"":`<span class="arrow ${d>0?"u":"d"}"></span>`}<b>${(d>0?"+":"")+nn(d,dec)}</b>
+          <span style="color:var(--lime-dim)">media ultime ${prior.length}</span></div></div>`;
+    }).join("");
+  } else twrap.classList.add("hidden");
+}
+
+let lastPane="uscite";
+function showDettaglio(id){
+  const a=Object.values(DATA?.activities||{}).find(x=>String(x.id)===String(id));
+  if(!a)return;
+  const onBtn=document.querySelector("#nav button.on");
+  if(onBtn)lastPane=onBtn.dataset.p;
+  renderDettaglio(a);
+  document.querySelectorAll(".pane").forEach(x=>x.classList.toggle("on",x.id==="p-dettaglio"));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
 function renderCalendario(){
   const byDate=indexActivities();
   const t=today();
@@ -1369,17 +1523,21 @@ function weekCard(r,m,open){
       real=`<div class="real">a corpo libero, oggi non risulta registrata</div>`;
     }
     const rowCls="row"+(s.stato==="no"?" past-no":"")+(s.stato==="fut"?" future":"");
-    body.appendChild(mk("div",rowCls,
+    const row=mk("div",rowCls,
       `<div class="d">${s.d}</div>
        <div><div class="plan">${esc(s.n)}${s.m?` <span style="color:var(--lime-dim);font-weight:500">${s.m}′</span>`:""}</div>${real}</div>
-       <div class="mark ${badge[0]}">${badge[1]}</div>`));
+       <div class="mark ${badge[0]}">${badge[1]}</div>`);
+    if(s.act&&s.act.id!=null) row.dataset.aid=s.act.id;
+    body.appendChild(row);
   });
   m.extra.forEach(a=>{
-    body.appendChild(mk("div","row",
+    const row=mk("div","row",
       `<div class="d">extra</div>
        <div><div class="plan">${esc(a.name||"Uscita")}</div>
         <div class="real">${a.start_time.slice(0,10).split("-").reverse().join("/")} · ${Math.round(a.duration_min||0)}′${a.distance_km?" · "+nn(a.distance_km,1)+" km":""}</div></div>
-       <div class="mark m-ex">in più</div>`));
+       <div class="mark m-ex">in più</div>`);
+    if(a.id!=null) row.dataset.aid=a.id;
+    body.appendChild(row);
   });
   if(!open) body.style.display="none";
   wrap.querySelector(".wk-head").style.cursor="pointer";
@@ -1496,6 +1654,20 @@ $("#bPick").onclick=()=>$("#fPick").click();
 $("#fPick").onchange=e=>readFiles(e.target.files);
 $("#bClear").onclick=()=>{localStorage.removeItem(KEY);DATA=null;LOAD=null;
   $("#msg").className="msg good";$("#msg").textContent="Svuotato.";paint();};
+
+/* ===== apertura dettaglio uscita, da qualunque lista la mostri ===== */
+["#rideList","#cmpTbl","#wkList"].forEach(sel=>{
+  const host=$(sel); if(!host)return;
+  host.addEventListener("click",e=>{
+    const el=e.target.closest("[data-aid]"); if(!el)return;
+    showDettaglio(el.dataset.aid);
+  });
+});
+$("#p-dettaglio").addEventListener("click",e=>{
+  if(!e.target.closest("[data-back]"))return;
+  document.querySelectorAll(".pane").forEach(x=>x.classList.toggle("on",x.id==="p-"+lastPane));
+  window.scrollTo({top:0,behavior:"smooth"});
+});
 </script>
 </body>
 </html>
