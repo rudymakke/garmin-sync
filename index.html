@@ -1357,6 +1357,12 @@ function renderDettaglio(a){
   const stim=a.tss_source&&a.tss_source!=="power";
   const durTxt=a.duration_min?Math.floor(a.duration_min/60)+"h"+String(Math.round(a.duration_min%60)).padStart(2,"0"):"—";
   const pctFtpNp=(a.normalized_power_w&&cfg.ftp)?a.normalized_power_w/cfg.ftp*100:null;
+  // IF e VI si possono ricavare qui stesso da NP/media/FTP, che sono gia' in
+  // pagina: non serve aspettare che garmin.py li scriva come campi a parte.
+  const ifVal=a.intensity_factor!=null?a.intensity_factor
+    :(a.normalized_power_w&&cfg.ftp?a.normalized_power_w/cfg.ftp:null);
+  const viVal=a.variability_index!=null?a.variability_index
+    :(a.normalized_power_w&&a.avg_power_w?a.normalized_power_w/a.avg_power_w:null);
   const tiles=[
     ["Distanza",a.distance_km?nn(a.distance_km,1):"—","km",""],
     ["Tempo in sella",durTxt,"",""],
@@ -1365,9 +1371,9 @@ function renderDettaglio(a){
     ["Potenza normalizzata",a.normalized_power_w?nn(a.normalized_power_w):"—","W",pctFtpNp!=null?nn(pctFtpNp)+"% della FTP":""],
     ["FC media",a.avg_hr?nn(a.avg_hr):"—","bpm",""],
     ["Watt per battito",wb!=null?nn(wb,2):"—","",""],
-    ["Intensity Factor",a.intensity_factor!=null?nn(a.intensity_factor,2):"—","",""],
-    ["Variability Index",a.variability_index!=null?nn(a.variability_index,2):"—","",a.variability_index!=null?(a.variability_index<1.05?"molto costante":a.variability_index<1.15?"variabile":"a intervalli/intermittente"):""],
-    ["Decoupling Pw:HR",a.decoupling_pct!=null?nn(a.decoupling_pct,1):"—",a.decoupling_pct!=null?"%":"",a.decoupling_pct!=null?(a.decoupling_pct<5?"fondo solido":a.decoupling_pct<10?"nella norma":"deriva cardiaca marcata"):"seduta troppo corta o senza stream"],
+    ["Intensity Factor",ifVal!=null?nn(ifVal,2):"—","",""],
+    ["Variability Index",viVal!=null?nn(viVal,2):"—","",viVal!=null?(viVal<1.05?"molto costante":viVal<1.15?"variabile":"a intervalli/intermittente"):""],
+    ["Decoupling Pw:HR",a.decoupling_pct!=null?nn(a.decoupling_pct,1):"—",a.decoupling_pct!=null?"%":"",a.decoupling_pct!=null?(a.decoupling_pct<5?"fondo solido":a.decoupling_pct<10?"nella norma":"deriva cardiaca marcata"):"serve il backfill dello stream"],
     ["Carico",a.tss?nn(a.tss):"—","punti",stim?"stima, non da potenza":""]
   ];
   $("#dettTiles").innerHTML=tiles.map(([lab,v,unit,foot])=>`
