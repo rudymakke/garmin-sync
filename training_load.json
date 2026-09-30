@@ -806,6 +806,13 @@
       "ctl": 19.3,
       "atl": 13.8,
       "tsb": 3.9
+    },
+    {
+      "date": "2026-09-30",
+      "tss": 1.3,
+      "ctl": 18.9,
+      "atl": 12.1,
+      "tsb": 5.5
     }
   ],
   "per_activity": {
@@ -933,6 +940,11 @@
       "date": "2026-09-26",
       "tss": 86.1,
       "source": "power"
+    },
+    "24549546468": {
+      "date": "2026-09-30",
+      "tss": 1.3,
+      "source": "stima_da_training_effect"
     }
   }
 }
