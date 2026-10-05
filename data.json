@@ -570,10 +570,10 @@
       "hrv_overnight_ms": 57,
       "sleep_hours": 7.9,
       "sleep_score": 91,
-      "body_battery_low": 74,
+      "body_battery_low": 28,
       "body_battery_high": 100,
-      "stress_avg": 24,
-      "steps": 372,
+      "stress_avg": 35,
+      "steps": 6606,
       "training_readiness": null
     }
   },
@@ -46387,7 +46387,7 @@
     "ftp_watts": 224,
     "weight_kg": 71.2,
     "weight_date": "2026-10-01",
-    "max_hr_observed": 157.0,
+    "max_hr_observed": 173.0,
     "max_hr_configured": 192,
     "max_hr_used": 192,
     "max_hr_source": "garmin",
