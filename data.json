@@ -570,10 +570,22 @@
       "hrv_overnight_ms": 57,
       "sleep_hours": 7.9,
       "sleep_score": 91,
-      "body_battery_low": 28,
+      "body_battery_low": 27,
       "body_battery_high": 100,
-      "stress_avg": 35,
-      "steps": 6606,
+      "stress_avg": 32,
+      "steps": 6828,
+      "training_readiness": null
+    },
+    "2026-10-06": {
+      "date": "2026-10-06",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 52,
+      "sleep_hours": 5.8,
+      "sleep_score": 71,
+      "body_battery_low": 34,
+      "body_battery_high": 83,
+      "stress_avg": 25,
+      "steps": 3929,
       "training_readiness": null
     }
   },
@@ -46383,11 +46395,11 @@
     }
   },
   "current": {
-    "as_of": "2026-10-05",
+    "as_of": "2026-10-06",
     "ftp_watts": 224,
-    "weight_kg": 71.2,
-    "weight_date": "2026-10-01",
-    "max_hr_observed": 173.0,
+    "weight_kg": 71.5,
+    "weight_date": "2026-10-06",
+    "max_hr_observed": 157.0,
     "max_hr_configured": 192,
     "max_hr_used": 192,
     "max_hr_source": "garmin",
