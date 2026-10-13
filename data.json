@@ -666,10 +666,10 @@
       "hrv_overnight_ms": 57,
       "sleep_hours": 6.3,
       "sleep_score": 79,
-      "body_battery_low": 53,
+      "body_battery_low": 32,
       "body_battery_high": 96,
-      "stress_avg": 29,
-      "steps": 2100,
+      "stress_avg": 34,
+      "steps": 5179,
       "training_readiness": null
     }
   },
