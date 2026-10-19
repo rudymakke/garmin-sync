@@ -728,8 +728,20 @@
       "sleep_score": 78,
       "body_battery_low": 27,
       "body_battery_high": 76,
-      "stress_avg": 26,
-      "steps": 3026,
+      "stress_avg": 25,
+      "steps": 7505,
+      "training_readiness": null
+    },
+    "2026-10-19": {
+      "date": "2026-10-19",
+      "resting_hr": 41,
+      "hrv_overnight_ms": 54,
+      "sleep_hours": 7.9,
+      "sleep_score": 73,
+      "body_battery_low": 45,
+      "body_battery_high": 96,
+      "stress_avg": 22,
+      "steps": 3136,
       "training_readiness": null
     }
   },
@@ -52824,7 +52836,7 @@
     }
   },
   "current": {
-    "as_of": "2026-10-18",
+    "as_of": "2026-10-19",
     "ftp_watts": 224,
     "weight_kg": 71.5,
     "weight_date": "2026-10-06",
