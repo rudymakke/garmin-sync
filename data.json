@@ -870,10 +870,22 @@
       "hrv_overnight_ms": 50,
       "sleep_hours": 6.1,
       "sleep_score": 70,
-      "body_battery_low": 34,
+      "body_battery_low": 29,
       "body_battery_high": 80,
+      "stress_avg": 22,
+      "steps": 5249,
+      "training_readiness": null
+    },
+    "2026-10-31": {
+      "date": "2026-10-31",
+      "resting_hr": 44,
+      "hrv_overnight_ms": 51,
+      "sleep_hours": 7.3,
+      "sleep_score": 82,
+      "body_battery_low": 40,
+      "body_battery_high": 88,
       "stress_avg": 20,
-      "steps": 1813,
+      "steps": 1043,
       "training_readiness": null
     }
   },
@@ -59165,10 +59177,26 @@
       "tss": 59.6,
       "tss_source": "power",
       "intensity_factor": 0.83
+    },
+    "24907488182": {
+      "id": 24907488182,
+      "name": "Pesi",
+      "type": "strength_training",
+      "start_time": "2026-10-30 18:02:25",
+      "duration_min": 20.7,
+      "distance_km": null,
+      "elev_gain_m": null,
+      "calories": 65.0,
+      "avg_hr": 79.0,
+      "max_hr": 120.0,
+      "training_effect_aerobic": 0.2,
+      "training_effect_anaerobic": 0.0,
+      "tss": 1.4,
+      "tss_source": "stima_da_training_effect"
     }
   },
   "current": {
-    "as_of": "2026-10-30",
+    "as_of": "2026-10-31",
     "ftp_watts": 228,
     "weight_kg": 71.7,
     "weight_date": "2026-10-30",
