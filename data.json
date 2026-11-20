@@ -1110,10 +1110,22 @@
       "hrv_overnight_ms": 50,
       "sleep_hours": 7.4,
       "sleep_score": 82,
-      "body_battery_low": 38,
+      "body_battery_low": 25,
       "body_battery_high": 87,
-      "stress_avg": 31,
-      "steps": 4414,
+      "stress_avg": 29,
+      "steps": 7852,
+      "training_readiness": null
+    },
+    "2026-11-20": {
+      "date": "2026-11-20",
+      "resting_hr": 42,
+      "hrv_overnight_ms": 51,
+      "sleep_hours": 6.5,
+      "sleep_score": 73,
+      "body_battery_low": 41,
+      "body_battery_high": 80,
+      "stress_avg": 22,
+      "steps": 4782,
       "training_readiness": null
     }
   },
@@ -70496,13 +70508,27 @@
       "tss": 61.9,
       "tss_source": "power",
       "intensity_factor": 0.78
+    },
+    "25137405383": {
+      "id": 25137405383,
+      "name": "Esercizi con elastici",
+      "type": "strength_training",
+      "start_time": "2026-11-19 20:00:45",
+      "duration_min": 15.0,
+      "distance_km": null,
+      "elev_gain_m": null,
+      "calories": 90.0,
+      "avg_hr": null,
+      "max_hr": null,
+      "training_effect_aerobic": null,
+      "training_effect_anaerobic": null
     }
   },
   "current": {
-    "as_of": "2026-11-19",
+    "as_of": "2026-11-20",
     "ftp_watts": 235,
-    "weight_kg": 71.7,
-    "weight_date": "2026-11-11",
+    "weight_kg": 72.0,
+    "weight_date": "2026-11-20",
     "max_hr_observed": 176.0,
     "max_hr_configured": 194,
     "max_hr_used": 194,
